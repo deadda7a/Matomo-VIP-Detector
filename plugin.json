@@ -1,9 +1,9 @@
 {
     "name": "VipDetector",
     "description": "Detect visits from special predefined IP ranges and display the name",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "require": {
-        "matomo": ">=4.15.0-stable,<5.0.0-b1"
+        "matomo": ">=5.0.0-b1,<6.0.0-b1"
     },
     "authors": [
         {
