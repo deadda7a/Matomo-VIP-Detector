@@ -12,9 +12,8 @@ class ImportData extends ConsoleCommand {
     protected function configure(): void {
         $this->setName('vipdetector:import-data');
         $this->setDescription('Import Json File with ranges');
-        $this->addArgument(
+        $this->addRequiredArgument(
             'file',
-            InputArgument::REQUIRED,
             'Path to the file'
         );
     }
