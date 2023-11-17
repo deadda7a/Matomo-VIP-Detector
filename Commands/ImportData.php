@@ -44,10 +44,11 @@ class ImportData extends ConsoleCommand {
         // Loop through the file
         foreach ($json as $entry) {
             // Check if the name is already in the database and insert it if it's not there
-            // (should not happen, since they are supposed to be unique, but useful when the file is extended and re-imported)
             if (!DatabaseMethods::checkNameInDb('vip_detector_names', $entry->name)) {
-                $output->writeln(sprintf("Inserting %s", $entry->name));
+                $output->write(sprintf("Inserting %s with %d ranges to insert: ", $entry->name, count($entry->ranges)));
                 DatabaseMethods::insertName($entry->name);
+            } else {
+                $output->write(sprintf("Name %s already in DB, %d range(s) to insert: ", $entry->name, count($entry->ranges)));
             }
 
             // Ranges are subkeys of names
@@ -60,25 +61,23 @@ class ImportData extends ConsoleCommand {
                     // We need to call this a 2nd time, because we also need the ID if no name was inserted in this run
                     $nameId = DatabaseMethods::checkNameInDb('vip_detector_names', $entry->name);
                     // We need the corresponding name id from the other table, and we want everything as one array
-                    $output->writeln(
-                        sprintf(
-                            'Inserting Range %s to %s with Name ID %s',
-                            $rangeInfo['range_from'],
-                            $rangeInfo['range_to'],
-                            $nameId
-                        )
-                    );
-
                     DatabaseMethods::insertRange(
                         array_merge(
                             $rangeInfo,
                             ['name_id' => $nameId]
                         )
                     );
+
+                    $output->write("#");
+                } else {
+                    $output->write(".");
                 }
             }
+
+            $output->writeln("");
         }
 
+        $this->writeSuccessMessage(["Done!"]);
         return self::SUCCESS;
     }
 }
