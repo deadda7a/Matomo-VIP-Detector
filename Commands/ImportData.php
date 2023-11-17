@@ -4,7 +4,6 @@ namespace Piwik\Plugins\VipDetector\Commands;
 
 use Exception;
 use Piwik\Plugin\ConsoleCommand;
-use Symfony\Component\Console\Input\InputArgument;
 use Piwik\Plugins\VipDetector\Dao\DatabaseMethods;
 use Piwik\Plugins\VipDetector\libs\Helpers;
 
@@ -31,13 +30,13 @@ class ImportData extends ConsoleCommand {
 
         // File not found etc
         if (!$string = @file_get_contents($file)) {
-            $output->writeln('Could not load file!', "error");
+            $output->writeln('<fg=red>Could not load file!</>');
             return self::FAILURE;
         }
 
         // File is not valid json
         if (!$json = json_decode($string)) {
-            $output->writeln('Could not parse file!', "error");
+            $output->writeln('<fg=red>Could not parse file!</>');
             return self::FAILURE;
         }
 
@@ -45,10 +44,10 @@ class ImportData extends ConsoleCommand {
         foreach ($json as $entry) {
             // Check if the name is already in the database and insert it if it's not there
             if (!DatabaseMethods::checkNameInDb('vip_detector_names', $entry->name)) {
-                $output->write(sprintf("Inserting %s with %d ranges to insert: ", $entry->name, count($entry->ranges)));
+                $output->write(sprintf('Dataset <fg=blue>%s</> inserted, %d ranges to insert: ', $entry->name, count($entry->ranges)));
                 DatabaseMethods::insertName($entry->name);
             } else {
-                $output->write(sprintf("Name %s already in DB, %d range(s) to insert: ", $entry->name, count($entry->ranges)));
+                $output->write(sprintf('Dataset <fg=blue>%s</> already in DB, %d range(s) to insert: ', $entry->name, count($entry->ranges)));
             }
 
             // Ranges are subkeys of names
@@ -68,16 +67,16 @@ class ImportData extends ConsoleCommand {
                         )
                     );
 
-                    $output->write("#");
+                    $output->write('<fg=green>#</>');
                 } else {
-                    $output->write(".");
+                    $output->write('<fg=yellow>.</>');
                 }
             }
 
-            $output->writeln("");
+            $output->writeln('');
         }
 
-        $this->writeSuccessMessage(["Done!"]);
+        $this->writeSuccessMessage(['Done!']);
         return self::SUCCESS;
     }
 }
