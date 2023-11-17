@@ -1,12 +1,16 @@
 <?php
 namespace Piwik\Plugins\VipDetector\Dao;
 
+use Exception;
 use Piwik\Db;
 use Piwik\Common;
 use Piwik\Plugins\VipDetector\libs\Helpers;
 
 class DatabaseMethods {
-	public static function getNameFromIp (string $ip) {
+    /**
+     * @throws Exception
+     */
+    public static function getNameFromIp (string $ip): string {
 		// We want the name that is associated with this IPs range. So we find the name of the range that is between the start and the end address and then join it on the names table
         $query = sprintf(
             'SELECT names.`name`
@@ -32,7 +36,10 @@ class DatabaseMethods {
 		return $name;
 	}
 
-    public static function checkNameInDb(string $table, string $searchValue) {
+    /**
+     * @throws Exception
+     */
+    public static function checkNameInDb(string $table, string $searchValue): false|string {
         $query = sprintf(
             'SELECT `id` FROM `%s` WHERE `name` = ?',
             Common::prefixTable($table)
@@ -52,7 +59,10 @@ class DatabaseMethods {
         return false;
     }
 
-    public static function checkRangeInDb(string $table, array $rangeInfo) {
+    /**
+     * @throws Exception
+     */
+    public static function checkRangeInDb(string $table, array $rangeInfo): false|string {
         $query = sprintf(
             'SELECT `id` FROM `%s` WHERE `range_from` = INET6_ATON(?) AND `range_to` = INET6_ATON(?)',
             Common::prefixTable($table)
@@ -74,7 +84,10 @@ class DatabaseMethods {
         return false;
     }
 
-    public static function insertName(string $name) {
+    /**
+     * @throws Exception
+     */
+    public static function insertName(string $name): void {
         $query = sprintf(
             'INSERT INTO `%s` (name)
                 VALUES
@@ -89,7 +102,10 @@ class DatabaseMethods {
         );
     }
 
-    public static function insertRange(array $rangeInfo) {
+    /**
+     * @throws Exception
+     */
+    public static function insertRange(array $rangeInfo): void {
         // Store the addresses as INET6_ATON representation for more efficency
         $query = sprintf(
             'INSERT INTO `%s` (type, range_from, range_to, name_id)

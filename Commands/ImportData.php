@@ -1,15 +1,15 @@
 <?php
+
 namespace Piwik\Plugins\VipDetector\Commands;
 
+use Exception;
 use Piwik\Plugin\ConsoleCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Piwik\Plugins\VipDetector\Dao\DatabaseMethods;
 use Piwik\Plugins\VipDetector\libs\Helpers;
 
-class ImportData extends ConsoleCommand
-{
-    protected function configure(): void
-    {
+class ImportData extends ConsoleCommand {
+    protected function configure(): void {
         $this->setName('vipdetector:import-data');
         $this->setDescription('Import Json File with ranges');
         $this->addArgument(
@@ -19,6 +19,9 @@ class ImportData extends ConsoleCommand
         );
     }
 
+    /**
+     * @throws Exception
+     */
     protected function doExecute(): int {
         $output = $this->getOutput();
         $input = $this->getInput();
@@ -28,10 +31,10 @@ class ImportData extends ConsoleCommand
         $output->writeln(sprintf('Loading from file %s', $file));
 
         // File not found etc
-        if(!$string = @file_get_contents($file)) {
+        if (!$string = @file_get_contents($file)) {
             $output->writeln('Could not load file!', "error");
             return self::FAILURE;
-        };
+        }
 
         // File is not valid json
         if (!$json = json_decode($string)) {
@@ -66,7 +69,7 @@ class ImportData extends ConsoleCommand
                             $nameId
                         )
                     );
-                    
+
                     DatabaseMethods::insertRange(
                         array_merge(
                             $rangeInfo,

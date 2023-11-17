@@ -1,4 +1,5 @@
 <?php
+
 namespace Piwik\Plugins\VipDetector\libs;
 
 use Matomo\Network\IP;
@@ -6,7 +7,7 @@ use Matomo\Network\IPUtils;
 use Matomo\Network\IPv6;
 
 class Helpers {
-	public static function getRangeInfo(string $range) {
+    public static function getRangeInfo(string $range): array {
         // Get the type (Ipv4/IPv6) and the first and last address of the subnet
         $rangeBounds = IPUtils::getIPRangeBounds($range);
 
@@ -21,11 +22,11 @@ class Helpers {
         ];
     }
 
-	public static function getAddressType(string $ip) {
+    public static function getAddressType(string $ip): int {
         $ipObj = IP::fromStringIP($ip);
 
         if ($ipObj instanceof IPv6) {
-           return 6;
+            return 6;
         }
 
         return 4;
