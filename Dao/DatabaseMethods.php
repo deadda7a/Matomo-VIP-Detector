@@ -39,7 +39,7 @@ class DatabaseMethods {
     /**
      * @throws Exception
      */
-    public static function checkNameInDb(string $table, string $searchValue): false|string {
+    public static function checkNameInDb(string $table, string $searchValue): string {
         $query = sprintf(
             'SELECT `id` FROM `%s` WHERE `name` = ?',
             Common::prefixTable($table)
@@ -62,7 +62,7 @@ class DatabaseMethods {
     /**
      * @throws Exception
      */
-    public static function checkRangeInDb(string $table, array $rangeInfo): false|string {
+    public static function checkRangeInDb(string $table, array $rangeInfo): string {
         $query = sprintf(
             'SELECT `id` FROM `%s` WHERE `range_from` = INET6_ATON(?) AND `range_to` = INET6_ATON(?)',
             Common::prefixTable($table)
