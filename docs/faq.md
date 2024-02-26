@@ -2,8 +2,10 @@
 
 ## Why
 
-I am a let's say "known person" in the Austrian government, mostly because I was one of five people suing them in a civil rights case. And I've a blog. Said blog get's visited by government agencies regulary, and I wanted to have an overview of this.
+I am a let's say "known person" in the Austrian government, mostly because I was one of five people suing them in a civil rights case.
+And I've a blog. Said blog gets visited by government agencies regulary, and I wanted to have an overview of this.
 
 ## Limitations
 
-The subnets you want to match on can't be smaller than what you set as the anonymisation factor for the IP adresses. For example if you set the masking for 2 bytes as recommended, the smallest subnet you can match is a /16, if you mask the last byte it is /24.
+The subnets you want to match on can't be smaller than what you set as the anonymization factor for the IP addresses.
+For example if you set the masking for 2 bytes as recommended, the smallest subnet you can match is a /16, if you mask the last byte it is /24.
