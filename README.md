@@ -2,7 +2,9 @@
 
 ## Description
 
-This plugin links the IP of the visitor with a database of IP ranges to be able to recognize special visitors. This database can be imported from a json file. For more infos check the docs and the FAQ.
+This plugin links the IP of the visitor with a database of IP ranges to be able to recognize special visitors.
+
+This database can be imported from a json file. For more infos check the docs and the FAQ.
 
 ## About
 
