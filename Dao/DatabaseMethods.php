@@ -10,7 +10,7 @@ class DatabaseMethods {
     /**
      * @throws Exception
      */
-    public static function getNameFromIp (string $ip): string {
+    public static function getNameFromIp(string $ip): string {
 		// We want the name that is associated with this IPs range. So we find the name of the range that is between the start and the end address and then join it on the names table
         $query = sprintf(
             'SELECT names.`name`
