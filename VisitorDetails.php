@@ -16,7 +16,7 @@ class VisitorDetails extends VisitorDetailsAbstract {
         $visitor['vipname'] = Common::sanitizeInputValues($name);
     }
 
-    public function renderVisitorDetails($visitorDetails) {
+    public function renderVisitorDetails($visitorDetails): array {
         // Render the template
         $view = new View('@VipDetector/vip');
         $view->vipName = $visitorDetails['vipname'];

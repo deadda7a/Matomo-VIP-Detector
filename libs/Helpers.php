@@ -22,6 +22,7 @@ class Helpers {
         ];
     }
 
+    // IPv4 or IPv6?
     public static function getAddressType(string $ip): int {
         $ipObj = IP::fromStringIP($ip);
 

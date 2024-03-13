@@ -24,11 +24,10 @@ class ImportData extends ConsoleCommand {
      */
     protected function doExecute(): int {
         $input = $this->getInput();
-
         $file = $input->getArgument('file');
-
         $settings = new SystemSettings();
 
+        // Warn the user if the scheduler import is also enabled
         if ($settings->importViaScheduler->getValue()) {
             $this->getOutput()->writeln("<fg=yellow>========= WARNING ==========</>");
             $this->getOutput()->writeln("<fg=yellow>Scheduler Import is enabled!</>");
@@ -37,6 +36,7 @@ class ImportData extends ConsoleCommand {
 
         $importer = new RangeUpdater($file, "file");
 
+        // try to import
         if (!$importer->import()) {
             $this->getOutput()->writeln("<fg=red>Import failed.</>");
             return self::FAILURE;

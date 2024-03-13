@@ -17,6 +17,7 @@ class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings {
         $this->importViaScheduler = $this->importViaSchedulerSetting();
     }
 
+    // Source URL Setting
     private function createImportUrlSetting(): SystemSetting {
         return $this->makeSetting(
             'importUrl',
@@ -32,6 +33,7 @@ class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings {
         );
     }
 
+    // Import via CLI or Scheduler?
     private function importViaSchedulerSetting(): SystemSetting {
         return $this->makeSetting(
             'importViaScheduler',

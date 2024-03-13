@@ -19,6 +19,7 @@ class Tasks extends \Piwik\Plugin\Tasks {
         $importUrl = $settings->importUrl->getValue();
         $importViaScheduler=$settings->importViaScheduler->getValue();
 
+        // Don't run if the scheduler is disabled -> User wants to import using the cli
         if (!$importViaScheduler) {
             $logger->info("Scheduler is disabled.");
             return;
