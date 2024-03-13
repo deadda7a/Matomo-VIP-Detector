@@ -3,12 +3,13 @@
 namespace Piwik\Plugins\VipDetector;
 
 use Piwik\Settings\FieldConfig;
+use Piwik\Settings\Plugin\SystemSetting;
 use Piwik\Validators\NotEmpty;
 use Piwik\Validators\UrlLike;
 
 class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings {
-    public $importUrl;
-    public $importViaScheduler;
+    public SystemSetting $importUrl;
+    public SystemSetting $importViaScheduler;
 
     protected function init() {
         $this->title = "VIP Ranges";
@@ -16,7 +17,7 @@ class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings {
         $this->importViaScheduler = $this->importViaSchedulerSetting();
     }
 
-    private function createImportUrlSetting() {
+    private function createImportUrlSetting(): SystemSetting {
         return $this->makeSetting(
             'importUrl',
             $default = 'https://austroedit-ranges.sebastian-elisa-pfeifer.eu/all.json',
@@ -31,7 +32,7 @@ class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings {
         );
     }
 
-    private function importViaSchedulerSetting() {
+    private function importViaSchedulerSetting(): SystemSetting {
         return $this->makeSetting(
             'importViaScheduler',
             $default = false,

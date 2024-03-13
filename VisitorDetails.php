@@ -26,7 +26,7 @@ class VisitorDetails extends VisitorDetailsAbstract {
     }
 
     // at the moment this always returns just the link to a DuckDuckGo search, but maybe we want the link in the database later
-    private function getVipUrl(string $vip) {
+    private function getVipUrl(string $vip): string {
         return sprintf("https://duckduckgo.com/?q=%s", urlencode($vip));
     }
 }
