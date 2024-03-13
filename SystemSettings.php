@@ -11,6 +11,7 @@ class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings {
     public $importViaScheduler;
 
     protected function init() {
+        $this->title = "VIP Ranges";
         $this->importUrl = $this->createImportUrlSetting();
         $this->importViaScheduler = $this->importViaSchedulerSetting();
     }
@@ -33,7 +34,7 @@ class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings {
     private function importViaSchedulerSetting() {
         return $this->makeSetting(
             'importViaScheduler',
-            $default = true,
+            $default = false,
             FieldConfig::TYPE_BOOL,
             function (FieldConfig $field) {
                 $field->title = 'Use Scheduler';

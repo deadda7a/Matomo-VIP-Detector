@@ -6,6 +6,7 @@ use Piwik\Exception\DI\DependencyException;
 use Piwik\Exception\DI\NotFoundException;
 use Piwik\Plugin\ConsoleCommand;
 use Piwik\Plugins\VipDetector\RangeUpdater;
+use Piwik\Plugins\VipDetector\SystemSettings;
 
 class ImportData extends ConsoleCommand {
     protected function configure(): void {
@@ -26,6 +27,22 @@ class ImportData extends ConsoleCommand {
 
         $file = $input->getArgument('file');
 
-        new RangeUpdater($file, "file");
+        $settings = new SystemSettings();
+
+        if ($settings->importViaScheduler->getValue()) {
+            $this->getOutput()->writeln("<fg=yellow>========= WARNING ==========</>");
+            $this->getOutput()->writeln("<fg=yellow>Scheduler Import is enabled!</>");
+            $this->getOutput()->writeln("<fg=yellow>========= WARNING ==========</>");
+        }
+
+        $importer = new RangeUpdater($file, "file");
+
+        if (!$importer->import()) {
+            $this->getOutput()->writeln("<fg=red>Import failed.</>");
+            return self::FAILURE;
+        }
+
+        $this->getOutput()->writeln("<fg=green>Import done.</>");
+        return self::SUCCESS;
     }
 }

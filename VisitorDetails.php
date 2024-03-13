@@ -1,15 +1,19 @@
 <?php
 namespace Piwik\Plugins\VipDetector;
 
+use Piwik\Common;
 use Piwik\Plugins\Live\VisitorDetailsAbstract;
 use Piwik\View;
 use Piwik\Plugins\VipDetector\Dao\DatabaseMethods;
 
 class VisitorDetails extends VisitorDetailsAbstract {
-    // We excent the visitor details instead of doing this in the renderer, maybe the users want to do something else with this information
+    // We extend the visitor details instead of doing this in the renderer, maybe the users want to do something else with this information
+    /**
+     * @throws \Exception
+     */
     public function extendVisitorDetails(&$visitor) {
         $name = DatabaseMethods::getNameFromIp($visitor['visitIp']);
-        $visitor['vipname'] = $name;
+        $visitor['vipname'] = Common::sanitizeInputValues($name);
     }
 
     public function renderVisitorDetails($visitorDetails) {
