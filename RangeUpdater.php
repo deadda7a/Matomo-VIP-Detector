@@ -2,6 +2,7 @@
 
 namespace Piwik\Plugins\VipDetector;
 
+use Piwik\Common;
 use Piwik\Container\StaticContainer;
 use Piwik\Exception\DI\DependencyException;
 use Piwik\Exception\DI\NotFoundException;
@@ -58,7 +59,7 @@ class RangeUpdater {
                 $this->logger->info("Source is file. Start loading");
 
                 // File not found etc
-                if (!$string = @file_get_contents($source)) {
+                if (!$source_string = @file_get_contents($source)) {
                     throw new Exception("File not found.");
                 }
 
@@ -73,13 +74,13 @@ class RangeUpdater {
 
                 // try to download the file
                 try {
-                    $string = Http::sendHttpRequest($source, 30);
+                    $source_string = Http::sendHttpRequest($source, 30);
                 } catch (Exception $e) {
                     throw new Exception($e);
                 }
 
                 // request was ok, but response was empty
-                if (!$string) {
+                if (!$source_string) {
                     throw new Exception("File could not be loaded.");
                 }
 
@@ -90,7 +91,7 @@ class RangeUpdater {
         }
 
         // input is not valid json
-        if (!$json = json_decode($string)) {
+        if (!$json = json_decode($source_string)) {
             throw new Exception("File is not JSON.");
         }
 
@@ -103,11 +104,12 @@ class RangeUpdater {
     private function insertData($data) {
         // loop through all elements in the source
         foreach ($data as $entry) {
-            $this->logger->debug($entry->name);
+            $name = Common::sanitizeInputValues($entry->name);
+            $this->logger->debug($name);
 
             // only insert the name if it is not already there
-            if (!DatabaseMethods::checkNameInDb('vip_detector_names', $entry->name)) {
-                DatabaseMethods::insertName($entry->name);
+            if (!DatabaseMethods::checkNameInDb('vip_detector_names', $name)) {
+                DatabaseMethods::insertName($name);
             }
 
             foreach ($entry->ranges as $range) {
@@ -118,7 +120,7 @@ class RangeUpdater {
                 // same as for name, don't insert duplicates
                 if (!DatabaseMethods::checkRangeInDb('vip_detector_ranges', $rangeInfo)) {
                     // every ip range needs a matching name entry
-                    $nameId = DatabaseMethods::checkNameInDb('vip_detector_names', $entry->name);
+                    $nameId = DatabaseMethods::checkNameInDb('vip_detector_names', $name);
 
                     DatabaseMethods::insertRange(
                         array_merge(
