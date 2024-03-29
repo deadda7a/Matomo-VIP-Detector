@@ -2,14 +2,14 @@
 
 namespace Piwik\Plugins\VipDetector\tests\Integration;
 
-use Piwik\Tests\Framework\TestCase\IntegrationTestCase;
+use Piwik\Tests\Framework\TestCase\ConsoleCommandTestCase;
 
 /**
  * @group VipDetector
  * @group ImportFileTest
  * @group Plugins
  */
-class ImportFileTest extends IntegrationTestCase {
+class ImportFileTest extends ConsoleCommandTestCase {
     public function setUp(): void {
         parent::setUp();
 
@@ -22,10 +22,13 @@ class ImportFileTest extends IntegrationTestCase {
         parent::tearDown();
     }
 
-    /**
-     * All your actual test methods should start with the name "test"
-     */
-    public function testSimpleAddition() {
-        $this->assertEquals(2, 1 + 1);
+    public function testImportFileNotFound() {
+        $result = $this->applicationTester->run(array(
+            'command' => 'vipdetector:import-data',
+            '--file' => 'idonotexist'
+        ));
+
+        $this->assertEquals(1, $result, $this->getCommandDisplayOutputErrorMessage());
+        self::assertStringContainsString("Import failed.", $this->applicationTester->getDisplay());
     }
 }
