@@ -19,8 +19,7 @@ class ImportData extends ConsoleCommand {
     }
 
     /**
-     * @throws NotFoundException
-     * @throws DependencyException
+     * @throws \Exception
      */
     protected function doExecute(): int {
         $input = $this->getInput();

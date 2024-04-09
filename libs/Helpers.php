@@ -7,9 +7,16 @@ use Matomo\Network\IPUtils;
 use Matomo\Network\IPv6;
 
 class Helpers {
+    /**
+     * @throws \Exception
+     */
     public static function getRangeInfo(string $range): array {
         // Get the type (Ipv4/IPv6) and the first and last address of the subnet
         $rangeBounds = IPUtils::getIPRangeBounds($range);
+
+        if (!$rangeBounds) {
+            throw new \Exception("Range could not be parsed!");
+        }
 
         // TODO: array_walk
         $from = IPUtils::binaryToStringIP($rangeBounds[0]);

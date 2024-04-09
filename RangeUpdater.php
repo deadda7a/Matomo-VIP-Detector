@@ -4,14 +4,11 @@ namespace Piwik\Plugins\VipDetector;
 
 use Piwik\Common;
 use Piwik\Container\StaticContainer;
-use Piwik\Exception\DI\DependencyException;
-use Piwik\Exception\DI\NotFoundException;
 use Piwik\Http;
 use Piwik\Log\LoggerInterface;
 use Piwik\Plugins\VipDetector\Dao\DatabaseMethods;
 use Piwik\Plugins\VipDetector\libs\Helpers;
 use Piwik\SettingsPiwik;
-use \Exception;
 
 class RangeUpdater {
     private $logger;
@@ -19,8 +16,7 @@ class RangeUpdater {
     private string $source;
 
     /**
-     * @throws DependencyException
-     * @throws NotFoundException
+     * @throws \Exception
      */
     public function __construct(string $source, string $source_type) {
         $this->logger = StaticContainer::get(LoggerInterface::class);
@@ -32,7 +28,7 @@ class RangeUpdater {
         // Load the json source
         try {
             $sourceData = $this->loadJson($this->source_type, $this->source);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->logger->critical("Could not load the JSON file: {e}", array('e' => $e->getMessage()));
             return false;
         }
@@ -40,7 +36,7 @@ class RangeUpdater {
         // Insert it
         try {
             $this->insertData($sourceData);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->logger->critical("Error while inserting: {e}", array('e' => $e->getMessage()));
             return false;
         }
@@ -50,7 +46,7 @@ class RangeUpdater {
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     private function loadJson($source_type, $source): array  {
         // At the moment this can be "file" or "url"
@@ -60,14 +56,14 @@ class RangeUpdater {
 
                 // File not found etc
                 if (!$source_string = @file_get_contents($source)) {
-                    throw new Exception("File not found.");
+                    throw new \Exception("File not found.");
                 }
 
                 break;
 
             case 'url':
                 if (!SettingsPiwik::isInternetEnabled()) {
-                    throw new Exception("To load from a remote URL internet access needs to be enabled.");
+                    throw new \Exception("To load from a remote URL internet access needs to be enabled.");
                 }
 
                 $this->logger->info("Source is remote URL. Start loading.");
@@ -75,31 +71,31 @@ class RangeUpdater {
                 // try to download the file
                 try {
                     $source_string = Http::sendHttpRequest($source, 30);
-                } catch (Exception $e) {
-                    throw new Exception($e);
+                } catch (\Exception $e) {
+                    throw new \Exception($e);
                 }
 
                 // request was ok, but response was empty
                 if (!$source_string) {
-                    throw new Exception("File could not be loaded.");
+                    throw new \Exception("File could not be loaded.");
                 }
 
                 break;
 
             default:
-                throw new Exception("Invalid source type.");
+                throw new \Exception("Invalid source type.");
         }
 
         // input is not valid json
         if (!$json = json_decode($source_string)) {
-            throw new Exception("File is not JSON.");
+            throw new \Exception("File is not JSON.");
         }
 
         return $json;
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     private function insertData($data) {
         // loop through all elements in the source
@@ -115,7 +111,11 @@ class RangeUpdater {
             foreach ($entry->ranges as $range) {
                 $this->logger->debug($range);
 
-                $rangeInfo = Helpers::getRangeInfo($range);
+                try {
+                    $rangeInfo = Helpers::getRangeInfo($range);
+                } catch (\Exception $e) {
+                    $this->logger->critical("Invalid range {range}", $range);
+                }
 
                 // same as for name, don't insert duplicates
                 if (!DatabaseMethods::checkRangeInDb('vip_detector_ranges', $rangeInfo)) {

@@ -23,12 +23,25 @@ class ImportFileTest extends ConsoleCommandTestCase {
     }
 
     public function testImportFileNotFound() {
-        $result = $this->applicationTester->run(array(
-            'command' => 'vipdetector:import-data',
-            '--file' => 'idonotexist'
-        ));
+        $result = $this->applicationTester->run(
+            array(
+                'command' => 'vipdetector:import-data',
+                'file' => '/idonotexist'
+            )
+        );
 
         $this->assertEquals(1, $result, $this->getCommandDisplayOutputErrorMessage());
-        self::assertStringContainsString("Import failed.", $this->applicationTester->getDisplay());
+        self::assertStringContainsString('Import failed.', $this->applicationTester->getDisplay());
+    }
+
+    public function testMissingFileArgument() {
+        $result = $this->applicationTester->run(
+            array(
+                'command' => 'vipdetector:import-data'
+            )
+        );
+
+        $this->assertEquals(1, $result, $this->getCommandDisplayOutputErrorMessage());
+        self::assertStringContainsString('Not enough arguments (missing: "file")', $this->applicationTester->getDisplay());
     }
 }
