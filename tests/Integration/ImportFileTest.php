@@ -2,6 +2,7 @@
 
 namespace Piwik\Plugins\VipDetector\tests\Integration;
 
+use Piwik\Plugins\VipDetector\VipDetector;
 use Piwik\Tests\Framework\TestCase\ConsoleCommandTestCase;
 
 /**
@@ -12,8 +13,6 @@ use Piwik\Tests\Framework\TestCase\ConsoleCommandTestCase;
 class ImportFileTest extends ConsoleCommandTestCase {
     public function setUp(): void {
         parent::setUp();
-
-        // set up your test here if needed
     }
 
     public function tearDown(): void {
@@ -31,7 +30,21 @@ class ImportFileTest extends ConsoleCommandTestCase {
         );
 
         $this->assertEquals(1, $result, $this->getCommandDisplayOutputErrorMessage());
-        self::assertStringContainsString('Import failed.', $this->applicationTester->getDisplay());
+        self::assertStringContainsString('File not found', $this->applicationTester->getDisplay());
+    }
+
+    public function testImportInvalidFile() {
+        $file = realpath(dirname(__FILE__) . '/../../LICENSE');
+
+        $result = $this->applicationTester->run(
+            array(
+                'command' => 'vipdetector:import-data',
+                'file' => $file
+            )
+        );
+
+        $this->assertEquals(1, $result, $this->getCommandDisplayOutputErrorMessage());
+        self::assertStringContainsString('File is not JSON', $this->applicationTester->getDisplay());
     }
 
     public function testMissingFileArgument() {
@@ -43,5 +56,22 @@ class ImportFileTest extends ConsoleCommandTestCase {
 
         $this->assertEquals(1, $result, $this->getCommandDisplayOutputErrorMessage());
         self::assertStringContainsString('Not enough arguments (missing: "file")', $this->applicationTester->getDisplay());
+    }
+
+    public function testSuccessfulImport() {
+        $plugin = new VipDetector;
+        $plugin->activate();
+
+        $file = realpath(dirname(__FILE__) . '/../../sample.json');
+
+        $result = $this->applicationTester->run(
+            array(
+                'command' => 'vipdetector:import-data',
+                'file' => $file
+            )
+        );
+
+        $this->assertEquals(0, $result, $this->getCommandDisplayOutputErrorMessage());
+        self::assertStringContainsString('Import done.', $this->applicationTester->getDisplay());
     }
 }

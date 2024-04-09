@@ -24,21 +24,24 @@ class RangeUpdater {
         $this->source_type = $source_type; // url or file
     }
 
+    /**
+     * @throws \Exception
+     */
     public function import(): bool {
         // Load the json source
         try {
             $sourceData = $this->loadJson($this->source_type, $this->source);
         } catch (\Exception $e) {
-            $this->logger->critical("Could not load the JSON file: {e}", array('e' => $e->getMessage()));
-            return false;
+            $this->logger->critical("Could not load the JSON file: " . $e->getMessage());
+            throw new \Exception("Could not load the JSON file: " . $e->getMessage());
         }
 
         // Insert it
         try {
             $this->insertData($sourceData);
         } catch (\Exception $e) {
-            $this->logger->critical("Error while inserting: {e}", array('e' => $e->getMessage()));
-            return false;
+            $this->logger->critical("Error while inserting: " . $e->getMessage());
+            throw new \Exception("Error while inserting: " . $e->getMessage());
         }
 
         $this->logger->info("Done loading.");
@@ -115,6 +118,7 @@ class RangeUpdater {
                     $rangeInfo = Helpers::getRangeInfo($range);
                 } catch (\Exception $e) {
                     $this->logger->critical("Invalid range {range}", $range);
+                    continue;
                 }
 
                 // same as for name, don't insert duplicates
