@@ -1,0 +1,18 @@
+includes:
+    - vendor/phpstan/phpstan-deprecation-rules/rules.neon
+    - vendor/spaze/phpstan-disallowed-calls/extension.neon
+    - vendor/spaze/phpstan-disallowed-calls/disallowed-dangerous-calls.neon
+parameters:
+    level: 6
+    paths:
+        - Commands
+        - Dao
+        - libs
+        - RangeUpdater.php
+        - Tasks.php
+        - VipDetector.php
+        - VisitorDetails.php
+        - SystemSettings.php
+    excludePaths:
+        - vendor
+        - tests

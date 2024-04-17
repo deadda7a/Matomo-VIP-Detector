@@ -9,8 +9,6 @@ on:
   pull_request:
     types: [opened, synchronize]
   push:
-    branches:
-      - '**.x-dev'
   workflow_dispatch:
 
 permissions:
@@ -51,8 +49,12 @@ jobs:
           matomo-test-branch: ${{ matrix.target }}
           artifacts-pass: ${{ secrets.ARTIFACTS_PASS }}
           upload-artifacts: ${{ matrix.php == '7.4' && matrix.target == 'maximum_supported_matomo' }}
+        env:
+          PHPUNIT_EXTRA_OPTIONS: "--coverage-clover coverage.xml"
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4.0.1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+          php-version: ${{ matrix.php }}
+          matomo-test-branch: ${{ matrix.target }}
           slug: deadda7a/Matomo-VIP-Detector

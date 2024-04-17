@@ -1,0 +1,39 @@
+name: PHPCS check
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+  push:
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  checks: read
+  contents: read
+  deployments: none
+  issues: read
+  packages: none
+  pull-requests: read
+  repository-projects: none
+  security-events: none
+  statuses: none
+
+jobs:
+  phpphan:
+    name: PHP Phan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false
+          persist-credentials: false
+      - name: Install dependencies
+        run: composer install --dev --prefer-dist --no-progress --no-suggest && composer dump-autoload
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          tools: phan
+      - name: Check PHP
+        id: phpphan
+        run: ./vendor/bin/phan
