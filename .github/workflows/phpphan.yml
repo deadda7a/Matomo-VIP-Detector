@@ -1,4 +1,4 @@
-name: PHPCS check
+name: PHP Phan check
 
 on:
   pull_request:
@@ -27,13 +27,13 @@ jobs:
         with:
           lfs: false
           persist-credentials: false
-      - name: Install dependencies
-        run: composer install --dev --prefer-dist --no-progress --no-suggest && composer dump-autoload
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.3'
           tools: phan
+      - name: Install dependencies
+        run: composer install --dev --prefer-dist --no-progress --no-suggest && composer dump-autoload
       - name: Check PHP
         id: phpphan
         run: ./vendor/bin/phan
