@@ -40,6 +40,26 @@ jobs:
         with:
           lfs: true
           persist-credentials: false
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: bcmath, ldap, curl, zip, pdo_mysql, mysqli, gd, redis, zlib, opcache
+          ini-values: |
+            post_max_size=8M,
+            memory_limit=768M,
+            max_execution_time=10000,
+            always_populate_raw_post_data=-1,
+            error_reporting=E_ALL,
+            log_errors=on,
+            error_log=${{ github.workspace }}/php-errors.log,
+            display_errors=on,
+            allow_url_fopen=on,
+            zend.exception_ignore_args=Off,
+            mysqli.allow_local_infile=On,
+            opcache.enable=0
+          tools: composer:v2
+          coverage: xdebug
       - name: Run tests
         uses: matomo-org/github-action-tests@main
         with:
@@ -49,7 +69,7 @@ jobs:
           matomo-test-branch: ${{ matrix.target }}
           artifacts-pass: ${{ secrets.ARTIFACTS_PASS }}
           upload-artifacts: ${{ matrix.php == '7.4' && matrix.target == 'maximum_supported_matomo' }}
-          phpunit-test-options: "--coverage-clover coverage.xml"
+          phpunit-test-options: '--coverage-clover coverage.xml'
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4.0.1
         with:
