@@ -2,3 +2,4 @@ vendor
 phpcs-report.xml
 coverage.xml
 docs/.build
+.phpdoc
