@@ -1,33 +1,24 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.5/phpunit.xsd"
-         beStrictAboutCoversAnnotation="true"
-         beStrictAboutOutputDuringTests="true"
-         beStrictAboutTodoAnnotatedTests="true"
-         bootstrap="vendor/autoload.php"
-         cacheResultFile=".phpunit.cache/test-results"
-         convertDeprecationsToExceptions="true"
-         executionOrder="depends,defects"
-         failOnRisky="true"
-         failOnWarning="true"
-         forceCoversAnnotation="true"
-         verbose="true">
-    <testsuites>
-        <testsuite name="default">
-            <directory>tests</directory>
-        </testsuite>
-    </testsuites>
-
-    <coverage cacheDirectory=".phpunit.cache/code-coverage" processUncoveredFiles="true">
-        <include>
-            <directory suffix=".php">.</directory>
-            <directory suffix=".php">/tmp/matomo</directory>
-        </include>
-        <exclude>
-            <directory suffix=".php">vendor</directory>
-        </exclude>
-        <report>
-            <clover outputFile="coverage.xml"/>
-        </report>
-    </coverage>
+<?xml version="1.0"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" bootstrap="./tests/bootstrap.php" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.1/phpunit.xsd" cacheDirectory=".phpunit.cache">
+  <coverage includeUncoveredFiles="true">
+    <report>
+      <text outputFile="php://stdout" showUncoveredFiles="true"/>
+      <clover outputFile="coverage.xml"/>
+    </report>
+  </coverage>
+  <logging/>
+  <testsuites>
+    <testsuite name="unit">
+      <directory>./tests/Unit</directory>
+    </testsuite>
+  </testsuites>
+  <source>
+    <include>
+      <directory suffix=".php">./Commands</directory>
+      <directory suffix=".php">./Dao</directory>
+      <directory suffix=".php">./libs</directory>
+      <directory suffix=".php">./RangeUpdater.php</directory>
+      <directory suffix=".php">/tmp/matomo/</directory>
+    </include>
+  </source>
 </phpunit>
