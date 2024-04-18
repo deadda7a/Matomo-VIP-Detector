@@ -1,0 +1,74 @@
+name: Unit Tests
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+  push:
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  checks: none
+  contents: read
+  deployments: none
+  issues: read
+  packages: none
+  pull-requests: read
+  repository-projects: none
+  security-events: none
+  statuses: none
+
+concurrency:
+  group: php-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  PluginTests:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: [ '7.4', '8.1', '8.2', '8.3' ]
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          lfs: true
+          persist-credentials: false
+      - name: Get Matomo
+        run: |
+          git clone https://github.com/matomo-org/matomo /tmp/matomo
+          cd /tmp/matomo
+          git checkout 5.0.3
+          git submodule update --init
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: bcmath, ldap, curl, zip, pdo_mysql, mysqli, gd, redis, zlib, opcache
+          ini-values: |
+            post_max_size=8M,
+            memory_limit=768M,
+            max_execution_time=10000,
+            always_populate_raw_post_data=-1,
+            error_reporting=E_ALL,
+            log_errors=on,
+            error_log=${{ github.workspace }}/php-errors.log,
+            display_errors=on,
+            allow_url_fopen=on,
+            zend.exception_ignore_args=Off,
+            mysqli.allow_local_infile=On,
+            opcache.enable=0
+          tools: composer:v2
+          coverage: xdebug
+      - name: Install dependencies
+        run: |
+          composer self-update
+          composer install
+          composer dump-autoload
+      - name: Run tests and collect coverage
+        run: ./vendor/bin/phpunit
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4.0.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: deadda7a/Matomo-VIP-Detector
