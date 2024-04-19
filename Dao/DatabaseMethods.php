@@ -119,4 +119,36 @@ class DatabaseMethods {
             $rangeInfo
         );
     }
+
+    /**
+     * @throws \Exception
+     */
+    public static function countNames(): int {
+        if ($result = Db::fetchOne(
+            sprintf(
+                'SELECT COUNT(DISTINCT "name") FROM `%s`',
+                Common::prefixTable('vip_detector_names')
+            )
+        )) {
+            return intval($result);
+        }
+
+        return 0;
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public static function countRanges(): int {
+        if ($result = Db::fetchOne(
+            sprintf(
+                'SELECT COUNT(DISTINCT "range_from", "range_to") FROM `%s`',
+                Common::prefixTable('vip_detector_ranges')
+            )
+        )) {
+            return intval($result);
+        }
+
+        return 0;
+    }
 }
