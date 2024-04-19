@@ -1,9 +1,25 @@
 {
-  "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "image": "ghcr.io/devcontainers/templates/php-mariadb:3.2.0",
   "features": {
     "ghcr.io/devcontainers/features/common-utils:2": {},
     "ghcr.io/devcontainers/features/php:1": {
       "version": 8
+    },
+    "ghcr.io/opencodeco/devcontainers/install-php-extensions:0": {
+      "extensions": "bcmath ldap zip pdo_mysql mysqli gd redis opcache xdebug"
     }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "github.vscode-github-actions"
+      ]
+    }
+  },
+  "postStartCommand": {
+    "matomo_clone": "git clone https://github.com/matomo-org/matomo /tmp/matomo",
+    "matomo_version": "cd /tmp/matomo; git checkout 5.0.3",
+    "matomo_requirements": "git submodule update --init && composer install --dev",
+    "matomo_dev_mode": "./console development:enable"
   }
 }

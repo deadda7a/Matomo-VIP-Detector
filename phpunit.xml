@@ -19,6 +19,7 @@
       <directory suffix=".php">./libs</directory>
       <directory suffix=".php">./RangeUpdater.php</directory>
       <directory suffix=".php">/tmp/matomo/</directory>
+      <directory suffix=".php">./vendor/</directory>
     </include>
   </source>
 </phpunit>

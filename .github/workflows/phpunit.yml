@@ -54,14 +54,6 @@ jobs:
             opcache.enable=0
           tools: composer:v2
           coverage: xdebug
-      - name: Get Matomo
-        run: |
-          git clone https://github.com/matomo-org/matomo /tmp/matomo
-          cd /tmp/matomo
-          git checkout 5.0.3
-          git submodule update --init
-          composer install
-          ./console development:enable
       - name: Install dependencies
         run: |
           composer self-update
