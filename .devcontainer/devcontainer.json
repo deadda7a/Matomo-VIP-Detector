@@ -15,11 +15,5 @@
         "github.vscode-github-actions"
       ]
     }
-  },
-  "postStartCommand": {
-    "matomo_clone": "git clone https://github.com/matomo-org/matomo /tmp/matomo",
-    "matomo_version": "cd /tmp/matomo; git checkout 5.0.3",
-    "matomo_requirements": "git submodule update --init && composer install --dev",
-    "matomo_dev_mode": "./console development:enable"
   }
 }

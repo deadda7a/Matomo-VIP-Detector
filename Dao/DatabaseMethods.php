@@ -1,14 +1,13 @@
 <?php
 namespace Piwik\Plugins\VipDetector\Dao;
 
-use Exception;
 use Piwik\Db;
 use Piwik\Common;
 use Piwik\Plugins\VipDetector\libs\Helpers;
 
 class DatabaseMethods {
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public static function getNameFromIp(string $ip): string {
 		// We want the name that is associated with this IPs range. So we find the name of the range that is between the start and the end address and then join it on the names table
@@ -37,7 +36,7 @@ class DatabaseMethods {
 	}
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public static function checkNameInDb(string $table, string $searchValue): string {
         $query = sprintf(
@@ -60,7 +59,7 @@ class DatabaseMethods {
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public static function checkRangeInDb(string $table, array $rangeInfo): string {
         $query = sprintf(
@@ -85,7 +84,7 @@ class DatabaseMethods {
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public static function insertName(string $name): void {
         $query = sprintf(
@@ -103,7 +102,7 @@ class DatabaseMethods {
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public static function insertRange(array $rangeInfo): void {
         // Store the addresses as INET6_ATON representation for more efficency

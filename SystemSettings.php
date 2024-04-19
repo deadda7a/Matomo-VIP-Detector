@@ -3,7 +3,6 @@
 namespace Piwik\Plugins\VipDetector;
 
 use Piwik\Settings\FieldConfig;
-use Piwik\Settings\Plugin\SystemSetting;
 use Piwik\Validators\NotEmpty;
 use Piwik\Validators\UrlLike;
 
@@ -21,7 +20,7 @@ class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings {
     private function createImportUrlSetting(): SystemSetting {
         return $this->makeSetting(
             'importUrl',
-            $default = 'https://austroedit-ranges.sebastian-elisa-pfeifer.eu/all.json',
+            $default = 'https://ranges.vikoe.eu/all.json',
             FieldConfig::TYPE_STRING,
             function (FieldConfig $field) {
                 $field->title = 'Json Source File Download URL';

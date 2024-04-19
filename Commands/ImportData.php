@@ -2,14 +2,10 @@
 
 namespace Piwik\Plugins\VipDetector\Commands;
 
-use Piwik\Exception\DI\DependencyException;
-use Piwik\Exception\DI\NotFoundException;
-use Piwik\Plugin\ConsoleCommand;
-use Piwik\Plugins\Marketplace\Api\Exception;
 use Piwik\Plugins\VipDetector\RangeUpdater;
 use Piwik\Plugins\VipDetector\SystemSettings;
 
-class ImportData extends ConsoleCommand {
+class ImportData extends \Piwik\Plugin\ConsoleCommand {
     protected function configure(): void {
         $this->setName('vipdetector:import-data');
         $this->setDescription('Import Json File with ranges');
