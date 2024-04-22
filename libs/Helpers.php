@@ -6,11 +6,13 @@ use Matomo\Network\IP;
 use Matomo\Network\IPUtils;
 use Matomo\Network\IPv6;
 
-class Helpers {
+class Helpers
+{
     /**
      * @throws \Exception
      */
-    public static function getRangeInfo(string $range): array {
+    public static function getRangeInfo(string $range): array
+    {
         // Get the type (Ipv4/IPv6) and the first and last address of the subnet
         $rangeBounds = IPUtils::getIPRangeBounds($range);
 
@@ -30,7 +32,8 @@ class Helpers {
     }
 
     // IPv4 or IPv6?
-    public static function getAddressType(string $ip): int {
+    public static function getAddressType(string $ip): int
+    {
         $ipObj = IP::fromStringIP($ip);
 
         if ($ipObj instanceof IPv6) {

@@ -14,5 +14,7 @@ parameters:
         - VisitorDetails.php
         - SystemSettings.php
     excludePaths:
-        - vendor
-        - tests
+        analyse:
+            - vendor
+        analyseAndScan:
+            - tests

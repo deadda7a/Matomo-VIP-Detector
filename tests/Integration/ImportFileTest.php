@@ -10,18 +10,22 @@ use Piwik\Tests\Framework\TestCase\ConsoleCommandTestCase;
  * @group ImportFileTest
  * @group Plugins
  */
-class ImportFileTest extends ConsoleCommandTestCase {
-    public function setUp(): void {
+class ImportFileTest extends ConsoleCommandTestCase
+{
+    public function setUp(): void
+    {
         parent::setUp();
     }
 
-    public function tearDown(): void {
+    public function tearDown(): void
+    {
         // clean up your test here if needed
 
         parent::tearDown();
     }
 
-    public function testImportFileNotFound() {
+    public function testImportFileNotFound()
+    {
         $result = $this->applicationTester->run(
             array(
                 'command' => 'vipdetector:import-data',
@@ -33,7 +37,8 @@ class ImportFileTest extends ConsoleCommandTestCase {
         self::assertStringContainsString('File not found', $this->applicationTester->getDisplay());
     }
 
-    public function testImportInvalidFile() {
+    public function testImportInvalidFile()
+    {
         $file = realpath(dirname(__FILE__) . '/../../LICENSE');
 
         $result = $this->applicationTester->run(
@@ -47,7 +52,8 @@ class ImportFileTest extends ConsoleCommandTestCase {
         self::assertStringContainsString('File is not JSON', $this->applicationTester->getDisplay());
     }
 
-    public function testMissingFileArgument() {
+    public function testMissingFileArgument()
+    {
         $result = $this->applicationTester->run(
             array(
                 'command' => 'vipdetector:import-data'
@@ -58,8 +64,9 @@ class ImportFileTest extends ConsoleCommandTestCase {
         self::assertStringContainsString('Not enough arguments (missing: "file")', $this->applicationTester->getDisplay());
     }
 
-    public function testSuccessfulImport() {
-        $plugin = new VipDetector;
+    public function testSuccessfulImport()
+    {
+        $plugin = new VipDetector();
         $plugin->activate();
 
         $file = realpath(dirname(__FILE__) . '/../../sample.json');

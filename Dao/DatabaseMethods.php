@@ -1,16 +1,19 @@
 <?php
+
 namespace Piwik\Plugins\VipDetector\Dao;
 
 use Piwik\Db;
 use Piwik\Common;
 use Piwik\Plugins\VipDetector\libs\Helpers;
 
-class DatabaseMethods {
+class DatabaseMethods
+{
     /**
      * @throws \Exception
      */
-    public static function getNameFromIp(string $ip): string {
-		// We want the name that is associated with this IPs range. So we find the name of the range that is between the start and the end address and then join it on the names table
+    public static function getNameFromIp(string $ip): string
+    {
+        // We want the name that is associated with this IPs range. So we find the name of the range that is between the start and the end address and then join it on the names table
         $query = sprintf(
             'SELECT names.`name`
                 FROM `%s` ranges
@@ -32,13 +35,14 @@ class DatabaseMethods {
             )
         );
 
-		return $name;
-	}
+        return $name;
+    }
 
     /**
      * @throws \Exception
      */
-    public static function checkNameInDb(string $table, string $searchValue): string {
+    public static function checkNameInDb(string $table, string $searchValue): string
+    {
         $query = sprintf(
             'SELECT `id` FROM `%s` WHERE `name` = ?',
             Common::prefixTable($table)
@@ -61,7 +65,8 @@ class DatabaseMethods {
     /**
      * @throws \Exception
      */
-    public static function checkRangeInDb(string $table, array $rangeInfo): string {
+    public static function checkRangeInDb(string $table, array $rangeInfo): string
+    {
         $query = sprintf(
             'SELECT `id` FROM `%s` WHERE `range_from` = INET6_ATON(?) AND `range_to` = INET6_ATON(?)',
             Common::prefixTable($table)
@@ -73,9 +78,9 @@ class DatabaseMethods {
             array(
                 $rangeInfo['range_from'],
                 $rangeInfo['range_to']
-                )
-            );
-        
+            )
+        );
+
         if ($result) {
             return $result;
         }
@@ -86,7 +91,8 @@ class DatabaseMethods {
     /**
      * @throws \Exception
      */
-    public static function insertName(string $name): void {
+    public static function insertName(string $name): void
+    {
         $query = sprintf(
             'INSERT INTO `%s` (name)
                 VALUES
@@ -104,7 +110,8 @@ class DatabaseMethods {
     /**
      * @throws \Exception
      */
-    public static function insertRange(array $rangeInfo): void {
+    public static function insertRange(array $rangeInfo): void
+    {
         // Store the addresses as INET6_ATON representation for more efficency
         $query = sprintf(
             'INSERT INTO `%s` (type, range_from, range_to, name_id)
@@ -123,29 +130,33 @@ class DatabaseMethods {
     /**
      * @throws \Exception
      */
-    public static function countNames(): int {
-        if ($result = Db::fetchOne(
-            sprintf(
-                'SELECT COUNT(DISTINCT "name") FROM `%s`',
-                Common::prefixTable('vip_detector_names')
-            )
-        )) {
-            return intval($result);
-        }
-
-        return 0;
+    public static function countNames(): int
+    {
+        return self::countValues('name', 'vip_detector_names');
     }
 
     /**
      * @throws \Exception
      */
-    public static function countRanges(): int {
-        if ($result = Db::fetchOne(
+    public static function countRanges(): int
+    {
+        return self::countValues('"range_from", "range_to"', 'vip_detector_ranges');
+    }
+
+    /**
+     * @throws \Exception
+     */
+    private static function countValues($to_select, $table): int
+    {
+        $result = Db::fetchOne(
             sprintf(
-                'SELECT COUNT(DISTINCT "range_from", "range_to") FROM `%s`',
-                Common::prefixTable('vip_detector_ranges')
+                'SELECT COUNT(DISTINCT "%s") FROM `%s`',
+                $to_select,
+                Common::prefixTable($table)
             )
-        )) {
+        );
+
+        if ($result) {
             return intval($result);
         }
 

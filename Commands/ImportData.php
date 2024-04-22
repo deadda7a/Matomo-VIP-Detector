@@ -2,11 +2,14 @@
 
 namespace Piwik\Plugins\VipDetector\Commands;
 
+use Piwik\Plugin\ConsoleCommand;
 use Piwik\Plugins\VipDetector\RangeUpdater;
 use Piwik\Plugins\VipDetector\SystemSettings;
 
-class ImportData extends \Piwik\Plugin\ConsoleCommand {
-    protected function configure(): void {
+class ImportData extends ConsoleCommand
+{
+    protected function configure(): void
+    {
         $this->setName('vipdetector:import-data');
         $this->setDescription('Import Json File with ranges');
         $this->addRequiredArgument(
@@ -18,12 +21,13 @@ class ImportData extends \Piwik\Plugin\ConsoleCommand {
     /**
      * @throws \Exception
      */
-    protected function doExecute(): int {
+    protected function doExecute(): int
+    {
         $input = $this->getInput();
         $file = $input->getArgument('file');
         $settings = new SystemSettings();
 
-        // Warn the user if the scheduler import is also enabled
+        // Warn the user if the scheduler import is also enabled.
         if ($settings->importViaScheduler->getValue()) {
             $this->getOutput()->writeln("<fg=yellow>========= WARNING ==========</>");
             $this->getOutput()->writeln("<fg=yellow>Scheduler Import is enabled!</>");
@@ -32,7 +36,7 @@ class ImportData extends \Piwik\Plugin\ConsoleCommand {
 
         $importer = new RangeUpdater($file, "file");
 
-        // try to import
+        // Try to import.
         try {
             $importer->import();
         } catch (\Exception $e) {

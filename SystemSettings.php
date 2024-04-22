@@ -6,18 +6,21 @@ use Piwik\Settings\FieldConfig;
 use Piwik\Validators\NotEmpty;
 use Piwik\Validators\UrlLike;
 
-class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings {
+class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings
+{
     public SystemSetting $importUrl;
     public SystemSetting $importViaScheduler;
 
-    protected function init() {
+    protected function init(): void
+    {
         $this->title = "VIP Ranges";
         $this->importUrl = $this->createImportUrlSetting();
         $this->importViaScheduler = $this->importViaSchedulerSetting();
     }
 
     // Source URL Setting
-    private function createImportUrlSetting(): SystemSetting {
+    private function createImportUrlSetting()
+    {
         return $this->makeSetting(
             'importUrl',
             $default = 'https://ranges.vikoe.eu/all.json',
@@ -33,7 +36,8 @@ class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings {
     }
 
     // Import via CLI or Scheduler?
-    private function importViaSchedulerSetting(): SystemSetting {
+    private function importViaSchedulerSetting()
+    {
         return $this->makeSetting(
             'importViaScheduler',
             $default = false,

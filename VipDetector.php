@@ -1,25 +1,30 @@
 <?php
+
 namespace Piwik\Plugins\VipDetector;
 
 use Piwik\DbHelper;
 use Piwik\Db;
 use Piwik\Common;
 
-class VipDetector extends \Piwik\Plugin {
-    public function registerEvents(): array {
+class VipDetector extends \Piwik\Plugin
+{
+    public function registerEvents(): array
+    {
         return [
             'CronArchive.getArchivingAPIMethodForPlugin' => 'getArchivingAPIMethodForPlugin',
         ];
     }
 
     // support archiving just this plugin via core:archive
-    public function getArchivingAPIMethodForPlugin(&$method, $plugin): void {
+    public function getArchivingAPIMethodForPlugin(&$method, $plugin): void
+    {
         if ($plugin == 'VipDetector') {
             $method = 'VipDetector.getExampleArchivedMetric';
         }
     }
 
-    public function activate(): void {
+    public function activate(): void
+    {
         DbHelper::createTable(
             'vip_detector_names',
             'id INT NOT NULL AUTO_INCREMENT, name VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL, PRIMARY KEY (id)'
@@ -31,7 +36,8 @@ class VipDetector extends \Piwik\Plugin {
         );
     }
 
-    public function uninstall(): void {
+    public function uninstall(): void
+    {
         Db::dropTables(
             array(
                 Common::prefixTable('vip_detector_names'),

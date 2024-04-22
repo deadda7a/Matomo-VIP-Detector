@@ -1,21 +1,25 @@
 <?php
+
 namespace Piwik\Plugins\VipDetector;
 
 use Piwik\Common;
 use Piwik\View;
 use Piwik\Plugins\VipDetector\Dao\DatabaseMethods;
 
-class VisitorDetails extends \Piwik\Plugins\Live\VisitorDetailsAbstract {
+class VisitorDetails extends \Piwik\Plugins\Live\VisitorDetailsAbstract
+{
     // We extend the visitor details instead of doing this in the renderer, maybe the users want to do something else with this information
     /**
      * @throws \Exception
      */
-    public function extendVisitorDetails(&$visitor) {
+    public function extendVisitorDetails(&$visitor)
+    {
         $name = DatabaseMethods::getNameFromIp($visitor['visitIp']);
         $visitor['vipname'] = Common::sanitizeInputValues($name);
     }
 
-    public function renderVisitorDetails($visitorDetails): array {
+    public function renderVisitorDetails($visitorDetails): array
+    {
         // Render the template
         $view = new View('@VipDetector/vip');
         $view->vipName = $visitorDetails['vipname'];
@@ -25,7 +29,8 @@ class VisitorDetails extends \Piwik\Plugins\Live\VisitorDetailsAbstract {
     }
 
     // at the moment this always returns just the link to a DuckDuckGo search, but maybe we want the link in the database later
-    private function getVipUrl(string $vip): string {
+    private function getVipUrl(string $vip): string
+    {
         return sprintf("https://duckduckgo.com/?q=%s", urlencode($vip));
     }
 }

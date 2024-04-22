@@ -10,7 +10,8 @@ use Piwik\Plugins\VipDetector\Dao\DatabaseMethods;
 use Piwik\Plugins\VipDetector\libs\Helpers;
 use Piwik\SettingsPiwik;
 
-class RangeUpdater {
+class RangeUpdater
+{
     private $logger;
     private string $source_type;
     private string $source;
@@ -18,7 +19,8 @@ class RangeUpdater {
     /**
      * @throws \Exception
      */
-    public function __construct(string $source, string $source_type) {
+    public function __construct(string $source, string $source_type)
+    {
         $this->logger = StaticContainer::get(LoggerInterface::class);
         $this->source = $source; // Path or Url to the source
         $this->source_type = $source_type; // url or file
@@ -27,7 +29,8 @@ class RangeUpdater {
     /**
      * @throws \Exception
      */
-    public function import(): bool {
+    public function import(): bool
+    {
         // Load the json source
         try {
             $sourceData = $this->loadJson($this->source_type, $this->source);
@@ -51,7 +54,8 @@ class RangeUpdater {
     /**
      * @throws \Exception
      */
-    private function loadJson($source_type, $source): array  {
+    private function loadJson($source_type, $source): array
+    {
         // At the moment this can be "file" or "url"
         switch ($source_type) {
             case 'file':
@@ -100,7 +104,8 @@ class RangeUpdater {
     /**
      * @throws \Exception
      */
-    private function insertData($data) {
+    private function insertData($data)
+    {
         // loop through all elements in the source
         foreach ($data as $entry) {
             $name = Common::sanitizeInputValues($entry->name);

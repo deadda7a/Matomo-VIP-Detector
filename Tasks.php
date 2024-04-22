@@ -5,19 +5,22 @@ namespace Piwik\Plugins\VipDetector;
 use Piwik\Container\StaticContainer;
 use Piwik\Log\LoggerInterface;
 
-class Tasks extends \Piwik\Plugin\Tasks {
-    public function schedule() {
+class Tasks extends \Piwik\Plugin\Tasks
+{
+    public function schedule()
+    {
         $this->hourly('rangeImportTask');
     }
 
     /**
      * @throws \Exception
      */
-    public function rangeImportTask() {
+    public function rangeImportTask()
+    {
         $logger = StaticContainer::get(LoggerInterface::class);
         $settings = new SystemSettings();
         $importUrl = $settings->importUrl->getValue();
-        $importViaScheduler=$settings->importViaScheduler->getValue();
+        $importViaScheduler = $settings->importViaScheduler->getValue();
 
         // Don't run if the scheduler is disabled -> User wants to import using the cli
         if (!$importViaScheduler) {
