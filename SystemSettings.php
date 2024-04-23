@@ -5,6 +5,7 @@ namespace Piwik\Plugins\VipDetector;
 use Piwik\Settings\FieldConfig;
 use Piwik\Validators\NotEmpty;
 use Piwik\Validators\UrlLike;
+use Piwik\Settings\SystemSetting;
 
 class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings
 {
@@ -13,7 +14,7 @@ class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings
 
     protected function init(): void
     {
-        $this->title = "VIP Ranges";
+        $this->title = "VIP Ranges Detector";
         $this->importUrl = $this->createImportUrlSetting();
         $this->importViaScheduler = $this->importViaSchedulerSetting();
     }
