@@ -34,9 +34,15 @@ jobs:
           tools: phan
           coverage: none
       - name: Install dependencies
-        run: composer install --dev --prefer-dist --no-progress --no-suggest && composer dump-autoload
+        run: |
+          composer install --dev --prefer-dist --no-progress --no-suggest
+          composer dump-autoload
       - name: Get Git Version of Matomo
-        run: git clone https://github.com/matomo-org/matomo.git /tmp/matomo
+        run: |
+          git clone -q --recurse-submodules https://github.com/matomo-org/matomo /tmp/matomo
+          cd /tmp/matomo
+          git fetch -q --all
+          composer install --prefer-dist --no-progress --no-suggest
       - name: Check PHP
         id: phpphan
         run: ./vendor/bin/phan
