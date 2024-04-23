@@ -140,7 +140,7 @@ class DatabaseMethods
      */
     public static function countRanges(): int
     {
-        return self::countValues('"range_from", "range_to"', 'vip_detector_ranges');
+        return self::countValues('name_id', 'vip_detector_ranges');
     }
 
     /**
