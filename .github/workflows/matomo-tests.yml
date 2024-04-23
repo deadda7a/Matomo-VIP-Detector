@@ -52,6 +52,7 @@ jobs:
           phpunit-test-options: '--coverage-clover coverage.xml'
           setup-script: tests/github-enable-xdebug.sh
       - name: Upload coverage reports to Codecov
+        if: always()
         uses: codecov/codecov-action@v4.0.1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
