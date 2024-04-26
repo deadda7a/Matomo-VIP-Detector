@@ -31,12 +31,8 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.3'
-          tools: phan
+          tools: cs2pr,phan
           coverage: none
-      - name: Install dependencies
-        run: |
-          composer install --dev --prefer-dist --no-progress --no-suggest
-          composer dump-autoload
       - name: Get Git Version of Matomo
         run: |
           git clone -q --recurse-submodules https://github.com/matomo-org/matomo /tmp/matomo
@@ -45,4 +41,4 @@ jobs:
           composer install --prefer-dist --no-progress --no-suggest
       - name: Check PHP
         id: phpphan
-        run: ./vendor/bin/phan
+        run: phan | cs2pr
