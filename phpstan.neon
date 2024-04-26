@@ -1,7 +1,7 @@
 includes:
-    - vendor/phpstan/phpstan-deprecation-rules/rules.neon
-    - vendor/spaze/phpstan-disallowed-calls/extension.neon
-    - vendor/spaze/phpstan-disallowed-calls/disallowed-dangerous-calls.neon
+    - /home/totedaten/.composer/vendor/phpstan/phpstan-deprecation-rules/rules.neon
+    - /home/totedaten/.composer/vendor/spaze/phpstan-disallowed-calls/extension.neon
+    - /home/totedaten/.composer/vendor/spaze/phpstan-disallowed-calls/disallowed-dangerous-calls.neon
 parameters:
     level: 6
     paths:
@@ -15,6 +15,6 @@ parameters:
         - SystemSettings.php
     excludePaths:
         analyse:
-            - vendor
+            - /tmp/matomo
         analyseAndScan:
             - tests

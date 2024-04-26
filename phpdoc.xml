@@ -18,9 +18,7 @@
             </source>
             <ignore hidden="true" symlinks="true">
                 <path>tests/**/*</path>
-                <path>vendor/**/*</path>
             </ignore>
         </api>
-
     </version>
 </phpdocumentor>

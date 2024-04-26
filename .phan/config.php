@@ -22,10 +22,7 @@ return [
     // Thus, both first-party and third-party code being used by
     // your application should be included in this list.
     'directory_list' => [
-        'Commands',
-        'Dao',
-        'libs',
-        'vendor',
+        '.',
         '/tmp/matomo'
     ],
 
@@ -41,7 +38,6 @@ return [
     //       should be added to the `directory_list` as
     //       to `exclude_analysis_directory_list`.
     "exclude_analysis_directory_list" => [
-        'vendor/',
         '/tmp/matomo'
     ],
 
