@@ -5,7 +5,7 @@ namespace Piwik\Plugins\VipDetector;
 use Piwik\Settings\FieldConfig;
 use Piwik\Validators\NotEmpty;
 use Piwik\Validators\UrlLike;
-use Piwik\Settings\SystemSetting;
+use Piwik\Settings\Plugin\SystemSetting;
 
 class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings
 {
