@@ -55,5 +55,6 @@ jobs:
         if: always()
         uses: codecov/codecov-action@v4.0.1
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+          token: ${{ secrets.CODECOV_TOKEN
+          name: Matomo-VIP-Detector-PHP-${{ matrix.php }}
           slug: deadda7a/Matomo-VIP-Detector
