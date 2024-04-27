@@ -37,9 +37,39 @@ class ImportFileTest extends ConsoleCommandTestCase
         self::assertStringContainsString('File not found', $this->applicationTester->getDisplay());
     }
 
-    public function testImportInvalidFile()
+    public function testImportInvalidFileCidr()
     {
-        $file = realpath(dirname(__FILE__) . '/../../LICENSE');
+        $file = realpath(dirname(__FILE__) . '/../test-assets/invalid-cidr.json');
+
+        $result = $this->applicationTester->run(
+            array(
+                'command' => 'vipdetector:import-data',
+                'file' => $file
+            )
+        );
+
+        $this->assertEquals(1, $result, $this->getCommandDisplayOutputErrorMessage());
+        self::assertStringContainsString('File is not JSON', $this->applicationTester->getDisplay());
+    }
+
+    public function testImportInvalidFileIp4()
+    {
+        $file = realpath(dirname(__FILE__) . '/../test-assets/invalid-ip4.json');
+
+        $result = $this->applicationTester->run(
+            array(
+                'command' => 'vipdetector:import-data',
+                'file' => $file
+            )
+        );
+
+        $this->assertEquals(1, $result, $this->getCommandDisplayOutputErrorMessage());
+        self::assertStringContainsString('File is not JSON', $this->applicationTester->getDisplay());
+    }
+
+    public function testImportInvalidFileIp6()
+    {
+        $file = realpath(dirname(__FILE__) . '/../test-assets/invalid-ip6.json');
 
         $result = $this->applicationTester->run(
             array(
@@ -64,12 +94,66 @@ class ImportFileTest extends ConsoleCommandTestCase
         self::assertStringContainsString('Not enough arguments (missing: "file")', $this->applicationTester->getDisplay());
     }
 
-    public function testSuccessfulImport()
+    public function testSuccessfulImportMixed()
     {
         $plugin = new VipDetector();
         $plugin->activate();
 
-        $file = realpath(dirname(__FILE__) . '/../../sample.json');
+        $file = realpath(dirname(__FILE__) . '/../test-assets/valid-mixed.json');
+
+        $result = $this->applicationTester->run(
+            array(
+                'command' => 'vipdetector:import-data',
+                'file' => $file
+            )
+        );
+
+        $this->assertEquals(0, $result, $this->getCommandDisplayOutputErrorMessage());
+        self::assertStringContainsString('Import done.', $this->applicationTester->getDisplay());
+    }
+
+    public function testSuccessfulImportIp4()
+    {
+        $plugin = new VipDetector();
+        $plugin->activate();
+
+        $file = realpath(dirname(__FILE__) . '/../test-assets/valid-ip4.json');
+
+        $result = $this->applicationTester->run(
+            array(
+                'command' => 'vipdetector:import-data',
+                'file' => $file
+            )
+        );
+
+        $this->assertEquals(0, $result, $this->getCommandDisplayOutputErrorMessage());
+        self::assertStringContainsString('Import done.', $this->applicationTester->getDisplay());
+    }
+
+    public function testSuccessfulImportIp6()
+    {
+        $plugin = new VipDetector();
+        $plugin->activate();
+
+        $file = realpath(dirname(__FILE__) . '/../test-assets/valid-ip6.json');
+
+        $result = $this->applicationTester->run(
+            array(
+                'command' => 'vipdetector:import-data',
+                'file' => $file
+            )
+        );
+
+        $this->assertEquals(0, $result, $this->getCommandDisplayOutputErrorMessage());
+        self::assertStringContainsString('Import done.', $this->applicationTester->getDisplay());
+    }
+
+    public function testSuccessfulImportUnicodeNames()
+    {
+        $plugin = new VipDetector();
+        $plugin->activate();
+
+        $file = realpath(dirname(__FILE__) . '/../test-assets/unicode-names.json');
 
         $result = $this->applicationTester->run(
             array(
