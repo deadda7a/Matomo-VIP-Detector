@@ -33,6 +33,8 @@ jobs:
           php-version: '8.3'
           tools: cs2pr,phan
           coverage: none
+      - name: Requirements
+        run: composer install --prefer-dist --no-progress
       - name: Get Git Version of Matomo
         run: |
           git clone -q --recurse-submodules https://github.com/matomo-org/matomo /tmp/matomo

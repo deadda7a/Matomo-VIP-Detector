@@ -2,15 +2,17 @@
 
 namespace Piwik\Plugins\VipDetector;
 
+use Exception;
 use Piwik\Common;
+use Piwik\Plugins\Live\VisitorDetailsAbstract;
 use Piwik\View;
 use Piwik\Plugins\VipDetector\Dao\DatabaseMethods;
 
-class VisitorDetails extends \Piwik\Plugins\Live\VisitorDetailsAbstract
+class VisitorDetails extends VisitorDetailsAbstract
 {
     // We extend the visitor details instead of doing this in the renderer, maybe the users want to do something else with this information
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function extendVisitorDetails(&$visitor)
     {

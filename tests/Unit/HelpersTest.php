@@ -2,6 +2,7 @@
 
 namespace Piwik\Plugins\VipDetector\tests\Unit;
 
+use Exception;
 use PHPUnit\Framework\TestCase;
 use Piwik\Plugins\VipDetector\libs\Helpers;
 
@@ -50,19 +51,19 @@ class HelpersTest extends TestCase
 
     public function testInvalidRangeV4()
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         Helpers::getRangeInfo("288.644.0.0/24");
     }
 
     public function testStringInRangeV4()
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         Helpers::getRangeInfo("1.2.3.aa/24");
     }
 
     public function testInvalidRangeV6()
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         Helpers::getRangeInfo("2001:zzz::/32");
     }
 }

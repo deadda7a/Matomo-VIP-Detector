@@ -2,6 +2,7 @@
 
 namespace Piwik\Plugins\VipDetector\Commands;
 
+use Exception;
 use Piwik\Plugin\ConsoleCommand;
 use Piwik\Plugins\VipDetector\RangeUpdater;
 use Piwik\Plugins\VipDetector\SystemSettings;
@@ -19,7 +20,7 @@ class ImportData extends ConsoleCommand
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     protected function doExecute(): int
     {
@@ -39,7 +40,7 @@ class ImportData extends ConsoleCommand
         // Try to import.
         try {
             $importer->import();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->getOutput()->writeln("<fg=red>Import failed: " . $e->getMessage());
             return self::FAILURE;
         }

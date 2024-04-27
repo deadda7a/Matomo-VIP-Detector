@@ -2,6 +2,7 @@
 
 namespace Piwik\Plugins\VipDetector\libs;
 
+use Exception;
 use Matomo\Network\IP;
 use Matomo\Network\IPUtils;
 use Matomo\Network\IPv6;
@@ -9,7 +10,7 @@ use Matomo\Network\IPv6;
 class Helpers
 {
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public static function getRangeInfo(string $range): array
     {
@@ -17,7 +18,7 @@ class Helpers
         $rangeBounds = IPUtils::getIPRangeBounds($range);
 
         if (!$rangeBounds) {
-            throw new \Exception("Range could not be parsed!");
+            throw new Exception("Range could not be parsed!");
         }
 
         // TODO: array_walk

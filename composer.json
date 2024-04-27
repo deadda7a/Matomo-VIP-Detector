@@ -1,0 +1,7 @@
+{
+    "require-dev": {
+        "phpstan/phpstan-deprecation-rules": "^1.1",
+        "spaze/phpstan-disallowed-calls": "^3.2",
+        "squizlabs/php_codesniffer": "^3.9"
+    }
+}

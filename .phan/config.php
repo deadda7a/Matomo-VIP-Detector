@@ -38,7 +38,8 @@ return [
     //       should be added to the `directory_list` as
     //       to `exclude_analysis_directory_list`.
     "exclude_analysis_directory_list" => [
-        '/tmp/matomo'
+        '/tmp/matomo',
+        'vendor'
     ],
 
     // A list of plugin files to execute.

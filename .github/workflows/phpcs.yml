@@ -32,6 +32,8 @@ jobs:
         with:
           php-version: '8.3'
           tools: cs2pr,phpcs
+      - name: Requirements
+        run: composer install --prefer-dist --no-progress
       - name: Check PHP code styles
         id: phpcs
         run: phpcs --report-full --report-checkstyle=./phpcs-report.xml

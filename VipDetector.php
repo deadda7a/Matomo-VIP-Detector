@@ -5,8 +5,9 @@ namespace Piwik\Plugins\VipDetector;
 use Piwik\DbHelper;
 use Piwik\Db;
 use Piwik\Common;
+use Piwik\Plugin;
 
-class VipDetector extends \Piwik\Plugin
+class VipDetector extends Plugin
 {
     public function registerEvents(): array
     {

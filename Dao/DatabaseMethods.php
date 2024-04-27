@@ -2,6 +2,7 @@
 
 namespace Piwik\Plugins\VipDetector\Dao;
 
+use Exception;
 use Piwik\Db;
 use Piwik\Common;
 use Piwik\Plugins\VipDetector\libs\Helpers;
@@ -9,7 +10,7 @@ use Piwik\Plugins\VipDetector\libs\Helpers;
 class DatabaseMethods
 {
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public static function getNameFromIp(string $ip): string
     {
@@ -39,7 +40,7 @@ class DatabaseMethods
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public static function checkNameInDb(string $table, string $searchValue): string
     {
@@ -63,7 +64,7 @@ class DatabaseMethods
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public static function checkRangeInDb(string $table, array $rangeInfo): string
     {
@@ -89,7 +90,7 @@ class DatabaseMethods
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public static function insertName(string $name): void
     {
@@ -108,7 +109,7 @@ class DatabaseMethods
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public static function insertRange(array $rangeInfo): void
     {
@@ -128,7 +129,7 @@ class DatabaseMethods
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public static function countNames(): int
     {
@@ -136,7 +137,7 @@ class DatabaseMethods
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public static function countRanges(): int
     {
@@ -144,7 +145,7 @@ class DatabaseMethods
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     private static function countValues($to_select, $table): int
     {

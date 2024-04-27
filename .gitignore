@@ -4,3 +4,4 @@ coverage.xml
 docs/.build
 .phpdoc
 .phpunit.*
+.php-cs*

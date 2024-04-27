@@ -2,6 +2,7 @@
 
 namespace Piwik\Plugins\VipDetector;
 
+use Exception;
 use Piwik\Container\StaticContainer;
 use Piwik\Log\LoggerInterface;
 
@@ -13,7 +14,7 @@ class Tasks extends \Piwik\Plugin\Tasks
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function rangeImportTask()
     {
