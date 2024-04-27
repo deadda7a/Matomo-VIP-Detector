@@ -2,9 +2,10 @@
 
 namespace Piwik\Plugins\VipDetector\tests\Integration;
 
+use Piwik\Common;
 use Piwik\Tests\Framework\TestCase\IntegrationTestCase;
 use Piwik\Plugins\VipDetector\Dao;
-use Piwik\Db;
+use Piwik\DbHelper;
 
 /**
  * @group VipDetector
@@ -28,8 +29,10 @@ class DbTest extends IntegrationTestCase
     }
 
 
-    public function testSimpleAddition()
+    public function testTableCreation()
     {
-        $this->assertEquals(2, 1 + 1);
+        Dao\DatabaseMethods::createTables();
+        $result = DbHelper::tableExists(Common::prefixTable('vip_detector_names'));
+        self::assertTrue($result);
     }
 }
