@@ -2,8 +2,6 @@
 
 namespace Piwik\Plugins\VipDetector;
 
-use Piwik\Db;
-use Piwik\Common;
 use Piwik\Plugin;
 use Piwik\Plugins\VipDetector\Dao\DatabaseMethods;
 

@@ -7,6 +7,7 @@ use Piwik\Db;
 use Piwik\DbHelper;
 use Piwik\Common;
 use Piwik\Plugins\VipDetector\libs\Helpers;
+use Piwik\Plugins\VipDetector\libs\NotFoundException;
 
 class DatabaseMethods
 {
@@ -15,7 +16,8 @@ class DatabaseMethods
      */
     public static function getNameFromIp(string $ip): string
     {
-        // We want the name that is associated with this IPs range. So we find the name of the range that is between the start and the end address and then join it on the names table
+        // We want the name that is associated with this IPs range.
+        // So we find the name of the range between the start and the end address and then join it on the names table.
         $query = sprintf(
             'SELECT names.`name`
                 FROM `%s` ranges
@@ -29,15 +31,13 @@ class DatabaseMethods
         );
 
         // We can only have one result, so it is enough to fetch one
-        $name = Db::fetchOne(
+        return Db::fetchOne(
             $query,
             array(
                 Helpers::getAddressType($ip),
                 $ip
             )
         );
-
-        return $name;
     }
 
     /**
@@ -60,12 +60,13 @@ class DatabaseMethods
             return $result;
         }
 
-        // I'm not happy with the type mixing here
-        return false;
+        throw new NotFoundException("Name not in Database!");
     }
 
     /**
      * @throws Exception
+     * @param string $table
+     * @param array<string, string> $rangeInfo
      */
     public static function checkRangeInDb(string $table, array $rangeInfo): string
     {
@@ -87,7 +88,7 @@ class DatabaseMethods
             return $result;
         }
 
-        return false;
+        throw new NotFoundException("Range not in Database!");
     }
 
     /**
@@ -111,6 +112,7 @@ class DatabaseMethods
 
     /**
      * @throws Exception
+     * @param array<int, string> $rangeInfo
      */
     public static function insertRange(array $rangeInfo): void
     {
@@ -148,7 +150,7 @@ class DatabaseMethods
     /**
      * @throws Exception
      */
-    private static function countValues($to_select, $table): int
+    private static function countValues(string $to_select, string $table): int
     {
         $result = Db::fetchOne(
             sprintf(
@@ -178,7 +180,7 @@ class DatabaseMethods
         );
     }
 
-    public static function removeTables() :void
+    public static function removeTables(): void
     {
         Db::dropTables(
             array(

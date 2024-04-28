@@ -9,11 +9,12 @@ use Piwik\Http;
 use Piwik\Log\LoggerInterface;
 use Piwik\Plugins\VipDetector\Dao\DatabaseMethods;
 use Piwik\Plugins\VipDetector\libs\Helpers;
+use Piwik\Plugins\VipDetector\libs\NotFoundException;
 use Piwik\SettingsPiwik;
 
 class RangeUpdater
 {
-    private $logger;
+    private LoggerInterface $logger;
     private string $source_type;
     private string $source;
 
@@ -55,7 +56,7 @@ class RangeUpdater
     /**
      * @throws Exception
      */
-    private function loadJson($source_type, $source): array
+    private function loadJson(string $source_type, string $source): array
     {
         // At the moment this can be "file" or "url"
         switch ($source_type) {
@@ -105,7 +106,7 @@ class RangeUpdater
     /**
      * @throws Exception
      */
-    private function insertData($data)
+    private function insertData(array $data): void
     {
         // loop through all elements in the source
         foreach ($data as $entry) {
@@ -113,7 +114,9 @@ class RangeUpdater
             $this->logger->debug($name);
 
             // only insert the name if it is not already there
-            if (!DatabaseMethods::checkNameInDb('vip_detector_names', $name)) {
+            try {
+                DatabaseMethods::checkNameInDb('vip_detector_names', $name);
+            } catch (NotFoundException) {
                 DatabaseMethods::insertName($name);
             }
 
@@ -122,14 +125,15 @@ class RangeUpdater
 
                 try {
                     $rangeInfo = Helpers::getRangeInfo($range);
-                } catch (Exception $e) {
+                } catch (Exception) {
                     $this->logger->critical("Invalid range {range}", $range);
                     continue;
                 }
 
                 // same as for name, don't insert duplicates
-                if (!DatabaseMethods::checkRangeInDb('vip_detector_ranges', $rangeInfo)) {
-                    // every ip range needs a matching name entry
+                try {
+                    DatabaseMethods::checkRangeInDb('vip_detector_ranges', $rangeInfo);
+                } catch (NotFoundException) {
                     $nameId = DatabaseMethods::checkNameInDb('vip_detector_names', $name);
 
                     DatabaseMethods::insertRange(
