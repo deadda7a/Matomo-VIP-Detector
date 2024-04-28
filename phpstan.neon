@@ -13,8 +13,11 @@ parameters:
         - VipDetector.php
         - VisitorDetails.php
         - SystemSettings.php
+        - /tmp/matomo
+        - /tmp/matomo-net
     excludePaths:
         analyse:
             - /tmp/matomo
+            - /tmp/matomo-net
         analyseAndScan:
             - tests

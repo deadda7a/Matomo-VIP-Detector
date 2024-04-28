@@ -23,7 +23,8 @@ return [
     // your application should be included in this list.
     'directory_list' => [
         '.',
-        '/tmp/matomo'
+        '/tmp/matomo',
+        '/tmp/matomo-net'
     ],
 
     // A directory list that defines files that will be excluded
@@ -39,7 +40,9 @@ return [
     //       to `exclude_analysis_directory_list`.
     "exclude_analysis_directory_list" => [
         '/tmp/matomo',
-        'vendor'
+        '/tmp/matomo-net',
+        'vendor',
+        'tests'
     ],
 
     // A list of plugin files to execute.
