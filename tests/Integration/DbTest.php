@@ -48,7 +48,8 @@ class DbTest extends IntegrationTestCase
             [
                 4,
                 '203.0.113.0',
-                '203.0.113.255'
+                '203.0.113.255',
+                1
             ]
         );
     }
@@ -59,7 +60,8 @@ class DbTest extends IntegrationTestCase
             [
                 6,
                 '2001:0db8:0000:0000:0000:0000:0000:0000',
-                '2001:0db8:ffff:ffff:ffff:ffff:ffff:ffff'
+                '2001:0db8:ffff:ffff:ffff:ffff:ffff:ffff',
+                1
             ]
         );
     }
@@ -71,7 +73,8 @@ class DbTest extends IntegrationTestCase
             [
                 4,
                 '555',
-                'asdasd'
+                'asdasd',
+                1
             ]
         );
     }
@@ -83,7 +86,8 @@ class DbTest extends IntegrationTestCase
             [
                 6,
                 '555',
-                'asdasd'
+                'asdasd',
+                1
             ]
         );
     }
