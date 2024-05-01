@@ -10,7 +10,10 @@ use Matomo\Network\IPv6;
 class Helpers
 {
     /**
+     * Get the range bounds and IP version of a range in CIDR format
      * @throws Exception
+     * @param string $range The range to check
+     * @returns array <int, string> The range bounds and the IP version
      */
     public static function getRangeInfo(string $range): array
     {
@@ -32,7 +35,11 @@ class Helpers
         ];
     }
 
-    // IPv4 or IPv6?
+    /**
+     * Returns the IP Version for a given IP
+     * @param string $ip The IP to check
+     * @return int IP Version
+     */
     public static function getAddressType(string $ip): int
     {
         $ipObj = IP::fromStringIP($ip);

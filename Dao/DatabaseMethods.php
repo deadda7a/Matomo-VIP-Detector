@@ -12,7 +12,11 @@ use Piwik\Plugins\VipDetector\libs\NotFoundException;
 class DatabaseMethods
 {
     /**
-     * @throws Exception
+     * Get the name associated with an IP. If there is no match, throw an NotFoundException.
+     *
+     * @throws NotFoundException
+     * @param string $ip The IP to check
+     * @return string The name found
      */
     public static function getNameFromIp(string $ip): string
     {
@@ -31,70 +35,94 @@ class DatabaseMethods
         );
 
         // We can only have one result, so it is enough to fetch one
-        return Db::fetchOne(
-            $query,
-            array(
-                Helpers::getAddressType($ip),
-                $ip
-            )
-        );
+        try {
+            $name = Db::fetchOne(
+                $query,
+                array(
+                    Helpers::getAddressType($ip),
+                    $ip
+                )
+            );
+        } catch (Exception $e) {
+            throw new NotFoundException($e->getMessage());
+        }
+
+        if (empty($name)) {
+            throw new NotFoundException('No name found');
+        }
+
+        return $name;
     }
 
     /**
-     * @throws Exception
+     * Check if the name is in the database. If not, throw a NotFoundException. If yes, return the id.
+     *
+     * @param string $searchValue
+     * @return string
+     * @throws NotFoundException
      */
-    public static function checkNameInDb(string $table, string $searchValue): string
+    public static function getNameId(string $searchValue): string
     {
         $query = sprintf(
             'SELECT `id` FROM `%s` WHERE `name` = ?',
-            Common::prefixTable($table)
+            Common::prefixTable('vip_detector_names')
         );
 
         // Names are unique, so we only need the first result
-        $result = Db::fetchOne(
-            $query,
-            array($searchValue) // fetchOne expects the parameters to be an array
-        );
-
-        if ($result) {
-            return $result;
+        try {
+            $result = Db::fetchOne(
+                $query,
+                array($searchValue) // fetchOne expects the parameters to be an array
+            );
+        } catch (Exception $e) {
+            throw new NotFoundException($e->getMessage());
         }
 
-        throw new NotFoundException("Name not in Database!");
+        if (empty($result)) {
+            throw new NotFoundException('No name found');
+        }
+
+        return $result;
     }
 
     /**
-     * @throws Exception
-     * @param string $table
-     * @param array<string, string> $rangeInfo
+     * Check if the database contains the range in question
+     * @param array<string, string> $rangeInfo An array containing the first and last IP address of the range
+     * @return bool
      */
-    public static function checkRangeInDb(string $table, array $rangeInfo): string
+    public static function checkRangeInDb(array $rangeInfo): bool
     {
         $query = sprintf(
             'SELECT `id` FROM `%s` WHERE `range_from` = INET6_ATON(?) AND `range_to` = INET6_ATON(?)',
-            Common::prefixTable($table)
+            Common::prefixTable('vip_detector_names')
         );
 
         // Same idea as with the names
-        $result = Db::fetchOne(
-            $query,
-            array(
-                $rangeInfo['range_from'],
-                $rangeInfo['range_to']
-            )
-        );
-
-        if ($result) {
-            return $result;
+        try {
+            $result = Db::fetchOne(
+                $query,
+                array(
+                    $rangeInfo['range_from'],
+                    $rangeInfo['range_to']
+                )
+            );
+        } catch (Exception) {
+            return false;
         }
 
-        throw new NotFoundException("Range not in Database!");
+        if (empty($result)) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
-     * @throws Exception
+     * Add a name to the database.
+     * @param string $name The name to be inserted
+     * @return bool
      */
-    public static function insertName(string $name): void
+    public static function insertName(string $name): bool
     {
         $query = sprintf(
             'INSERT INTO `%s` (name)
@@ -103,20 +131,25 @@ class DatabaseMethods
             Common::prefixTable('vip_detector_names')
         );
 
-        // an if is not needed because this throws an exception if it fails
-        Db::query(
-            $query,
-            array($name)
-        );
+        try {
+            Db::query(
+                $query,
+                array($name)
+            );
+        } catch (Exception) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
-     * @throws Exception
-     * @param array<int, string> $rangeInfo
+     * Add a range in the database
+     * @param array<int, string> $rangeInfo An array containing the first and last IP address to be inserted
      */
-    public static function insertRange(array $rangeInfo): void
+    public static function insertRange(array $rangeInfo): bool
     {
-        // Store the addresses as INET6_ATON representation for more efficency
+        // Store the addresses as INET6_ATON representation for more efficiency
         $query = sprintf(
             'INSERT INTO `%s` (type, range_from, range_to, name_id)
                 VALUES
@@ -124,23 +157,32 @@ class DatabaseMethods
             Common::prefixTable('vip_detector_ranges')
         );
 
-        // Same as above, no if needed
-        Db::query(
-            $query,
-            $rangeInfo
-        );
+        try {
+            Db::query(
+                $query,
+                $rangeInfo
+            );
+        } catch (Exception) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
+     * Counts how many names are present in the database
      * @throws Exception
+     * @returns int The number of names
      */
     public static function countNames(): int
     {
-        return self::countValues('name', 'vip_detector_names');
+        return self::countValues('id', 'vip_detector_names');
     }
 
     /**
+     * Counts how many ranges are present in the database
      * @throws Exception
+     * @returns int The number of ranges
      */
     public static function countRanges(): int
     {
@@ -148,38 +190,61 @@ class DatabaseMethods
     }
 
     /**
+     * Count how many entries are present in a specific table
      * @throws Exception
+     * @param string $to_select The field to count
+     * @param string $table The table that contains the field
+     * @returns int The number of values in the database
      */
     private static function countValues(string $to_select, string $table): int
     {
-        $result = Db::fetchOne(
-            sprintf(
-                'SELECT COUNT(DISTINCT "%s") FROM `%s`',
-                $to_select,
-                Common::prefixTable($table)
-            )
-        );
-
-        if ($result) {
-            return intval($result);
+        try {
+            $result = Db::fetchOne(
+                sprintf(
+                    'SELECT COUNT("%s") FROM `%s`',
+                    $to_select,
+                    Common::prefixTable($table)
+                )
+            );
+        } catch (Exception) {
+            return 0;
         }
 
-        return 0;
+        if (empty($result)) {
+            return 0;
+        }
+
+        return intval($result);
     }
 
+    /**
+     * Creates the needed database tables
+     * @returns void
+     */
     public static function createTables(): void
     {
         DbHelper::createTable(
             'vip_detector_names',
-            'id INT NOT NULL AUTO_INCREMENT, name VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL, PRIMARY KEY (id)'
+            'id INT NOT NULL AUTO_INCREMENT,
+                name VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+                PRIMARY KEY (id)'
         );
 
         DbHelper::createTable(
             'vip_detector_ranges',
-            'id INT NOT NULL AUTO_INCREMENT, type TINYINT NOT NULL, range_from VARBINARY(16) NOT NULL, range_to VARBINARY(16) NOT NULL, name_id INT NOT NULL, PRIMARY KEY (id)'
+            'id INT NOT NULL AUTO_INCREMENT,
+                type TINYINT NOT NULL,
+                range_from VARBINARY(16) NOT NULL,
+                range_to VARBINARY(16) NOT NULL,
+                name_id INT NOT NULL,
+                PRIMARY KEY (id)'
         );
     }
 
+    /**
+     * Deletes the database tables
+     * @returns void
+     */
     public static function removeTables(): void
     {
         Db::dropTables(

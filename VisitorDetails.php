@@ -10,27 +10,39 @@ use Piwik\Plugins\VipDetector\Dao\DatabaseMethods;
 
 class VisitorDetails extends VisitorDetailsAbstract
 {
-    // We extend the visitor details instead of doing this in the renderer, maybe the users want to do something else with this information
     /**
+     * Extend the visitor details instead of the renderer
      * @throws Exception
+     * @param array &$visitor The visitor detail array
      */
-    public function extendVisitorDetails(&$visitor)
+    public function extendVisitorDetails(&$visitor): void
     {
         $name = DatabaseMethods::getNameFromIp($visitor['visitIp']);
-        $visitor['vipname'] = Common::sanitizeInputValues($name);
+        $visitor['vip_name'] = Common::sanitizeInputValues($name);
     }
 
+    /**
+     * Render the template with the details
+     * @param $visitorDetails
+     * @return array<int, array<int, int|string>> The rendered view
+     */
     public function renderVisitorDetails($visitorDetails): array
     {
         // Render the template
         $view = new View('@VipDetector/vip');
-        $view->vipName = $visitorDetails['vipname'];
-        $view->vipUrl = $this->getVipUrl($visitorDetails['vipname']);
+        $view->vipName = $visitorDetails['vip_name'];
+        $view->vipUrl = $this->getVipUrl($visitorDetails['vip_name']);
 
         return [[30, $view->render()]];
     }
 
-    // at the moment this always returns just the link to a DuckDuckGo search, but maybe we want the link in the database later
+    /**
+     * Generates an address the frontend can link to.
+     * At the moment this is just a link to DuckDuckGo
+     *
+     * @param string $vip The name of the VIP
+     * @return string The url to link to
+     */
     private function getVipUrl(string $vip): string
     {
         return sprintf("https://duckduckgo.com/?q=%s", urlencode($vip));

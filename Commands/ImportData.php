@@ -20,7 +20,9 @@ class ImportData extends ConsoleCommand
     }
 
     /**
+     * Start file import. Warn the User in case the Scheduler import is also enabled.
      * @throws Exception
+     * @return int The exit code
      */
     protected function doExecute(): int
     {
@@ -30,22 +32,22 @@ class ImportData extends ConsoleCommand
 
         // Warn the user if the scheduler import is also enabled.
         if ($settings->importViaScheduler->getValue()) {
-            $this->getOutput()->writeln("<fg=yellow>========= WARNING ==========</>");
-            $this->getOutput()->writeln("<fg=yellow>Scheduler Import is enabled!</>");
-            $this->getOutput()->writeln("<fg=yellow>========= WARNING ==========</>");
+            $this->getOutput()->writeln('<fg=yellow>========= WARNING ==========</>');
+            $this->getOutput()->writeln('<fg=yellow>Scheduler Import is enabled!</>');
+            $this->getOutput()->writeln('<fg=yellow>========= WARNING ==========</>');
         }
 
-        $importer = new RangeUpdater($file, "file");
+        $importer = new RangeUpdater($file, 'file');
 
         // Try to import.
         try {
             $importer->import();
         } catch (Exception $e) {
-            $this->getOutput()->writeln("<fg=red>Import failed: " . $e->getMessage());
+            $this->getOutput()->writeln("<fg=red>Import failed: {$e->getMessage()}</>");
             return self::FAILURE;
         }
 
-        $this->getOutput()->writeln("<fg=green>Import done.</>");
+        $this->getOutput()->writeln('<fg=green>Import done.</>');
         return self::SUCCESS;
     }
 }

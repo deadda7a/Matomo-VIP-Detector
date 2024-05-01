@@ -24,7 +24,7 @@ class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings
     {
         return $this->makeSetting(
             'importUrl',
-            $default = 'https://ranges.vikoe.eu/all.json',
+            'https://ranges.vikoe.eu/all.json',
             FieldConfig::TYPE_STRING,
             function (FieldConfig $field) {
                 $field->title = 'Json Source File Download URL';
@@ -41,7 +41,7 @@ class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings
     {
         return $this->makeSetting(
             'importViaScheduler',
-            $default = false,
+            false,
             FieldConfig::TYPE_BOOL,
             function (FieldConfig $field) {
                 $field->title = 'Use Scheduler';

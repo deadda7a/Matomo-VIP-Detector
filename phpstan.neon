@@ -15,6 +15,7 @@ parameters:
         - SystemSettings.php
         - /tmp/matomo
         - /tmp/matomo-net
+        - tests
     excludePaths:
         analyse:
             - /tmp/matomo

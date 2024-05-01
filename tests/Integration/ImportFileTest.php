@@ -3,6 +3,7 @@
 namespace Piwik\Plugins\VipDetector\tests\Integration;
 
 use Piwik\Plugins\VipDetector\VipDetector;
+use Piwik\Plugins\VipDetector\Dao;
 use Piwik\Tests\Framework\TestCase\ConsoleCommandTestCase;
 
 /**
@@ -14,13 +15,13 @@ class ImportFileTest extends ConsoleCommandTestCase
 {
     public function setUp(): void
     {
+        Dao\DatabaseMethods::createTables();
         parent::setUp();
     }
 
     public function tearDown(): void
     {
-        // clean up your test here if needed
-
+        Dao\DatabaseMethods::removeTables();
         parent::tearDown();
     }
 

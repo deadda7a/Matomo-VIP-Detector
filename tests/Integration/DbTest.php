@@ -2,7 +2,6 @@
 
 namespace Piwik\Plugins\VipDetector\tests\Integration;
 
-use Exception;
 use Piwik\Common;
 use Piwik\Tests\Framework\TestCase\IntegrationTestCase;
 use Piwik\Plugins\VipDetector\Dao;
@@ -33,62 +32,71 @@ class DbTest extends IntegrationTestCase
     public function testTableCreation()
     {
         Dao\DatabaseMethods::createTables();
-        $result = DbHelper::tableExists(Common::prefixTable('vip_detector_names'));
-        self::assertTrue($result);
+        self::assertTrue(
+            DbHelper::tableExists(Common::prefixTable('vip_detector_names'))
+        );
     }
 
     public function testNameInsert()
     {
-        Dao\DatabaseMethods::insertName('Testname');
+        self::assertTrue(
+            Dao\DatabaseMethods::insertName('Testname')
+        );
     }
 
     public function testInsertRangeValidIp4()
     {
-        Dao\DatabaseMethods::insertRange(
-            [
-                4,
-                '203.0.113.0',
-                '203.0.113.255',
-                1
-            ]
+        self::assertTrue(
+            Dao\DatabaseMethods::insertRange(
+                [
+                    4,
+                    '203.0.113.0',
+                    '203.0.113.255',
+                    1
+                ]
+            )
         );
     }
 
     public function testInsertRangeValidIp6()
     {
-        Dao\DatabaseMethods::insertRange(
-            [
-                6,
-                '2001:0db8:0000:0000:0000:0000:0000:0000',
-                '2001:0db8:ffff:ffff:ffff:ffff:ffff:ffff',
-                1
-            ]
+        self::assertTrue(
+            Dao\DatabaseMethods::insertRange(
+                [
+                    6,
+                    '2001:0db8:0000:0000:0000:0000:0000:0000',
+                    '2001:0db8:ffff:ffff:ffff:ffff:ffff:ffff',
+                    1
+                ]
+            )
         );
     }
 
-    public function testInsertRangeInalidIp4()
+    public function testInsertRangeInvalidIp4()
     {
-        $this->expectException(Exception::class);
-        Dao\DatabaseMethods::insertRange(
-            [
-                4,
-                '555',
-                'asdasd',
-                1
-            ]
+        self::assertFalse(
+            Dao\DatabaseMethods::insertRange(
+                [
+                    4,
+                    '555',
+                    'asdasd',
+                    1
+                ]
+            )
         );
     }
 
-    public function testInsertRangeInalidIp6()
+    public function testInsertRangeInvalidIp6()
     {
-        $this->expectException(Exception::class);
-        Dao\DatabaseMethods::insertRange(
-            [
-                6,
-                '555',
-                'asdasd',
-                1
-            ]
+        self::assertFalse(
+            Dao\DatabaseMethods::insertRange(
+                [
+                    6,
+                    '555',
+                    'asdasd',
+                    1
+                ]
+            )
         );
     }
 }

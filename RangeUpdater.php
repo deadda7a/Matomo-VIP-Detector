@@ -15,10 +15,18 @@ use Piwik\SettingsPiwik;
 class RangeUpdater
 {
     private LoggerInterface $logger;
+    /**
+     * @var string $source_type How we are acquiring the data
+     */
     private string $source_type;
+    /**
+     * @var string $source Where the data is
+     */
     private string $source;
 
     /**
+     * @param string $source Where the data is
+     * @param string $source_type How we are acquiring the data
      * @throws Exception
      */
     public function __construct(string $source, string $source_type)
@@ -29,6 +37,8 @@ class RangeUpdater
     }
 
     /**
+     * Try to fetch the data file and seed the database
+     * @returns bool The status if the import
      * @throws Exception
      */
     public function import(): bool
@@ -37,33 +47,38 @@ class RangeUpdater
         try {
             $sourceData = $this->loadJson($this->source_type, $this->source);
         } catch (Exception $e) {
-            $this->logger->critical("Could not load the JSON file: " . $e->getMessage());
-            throw new Exception("Could not load the JSON file: " . $e->getMessage());
+            $this->logger->critical("Could not load the JSON file: {$e->getMessage()}");
+            return false;
         }
 
         // Insert it
         try {
             $this->insertData($sourceData);
         } catch (Exception $e) {
-            $this->logger->critical("Error while inserting: " . $e->getMessage());
-            throw new Exception("Error while inserting: " . $e->getMessage());
+            $this->logger->critical("Error while inserting: {$e->getMessage()}");
+            return false;
         }
 
         $this->logger->info("Done loading.");
+
         return true;
     }
 
     /**
+     * Load the JSON Data. This can be done from a local file via the command line, or via HTTP from the UI.
+     * @param string $source_type
+     * @param string $source
+     * @return \stdClass[] $rangeInfo
      * @throws Exception
      */
     private function loadJson(string $source_type, string $source): array
     {
-        // At the moment this can be "file" or "url"
+        // At the moment this can be "file" or "url".
         switch ($source_type) {
             case 'file':
                 $this->logger->info("Source is file. Start loading");
 
-                // File not found etc
+                // File not found etc.
                 if (!$source_string = @file_get_contents($source)) {
                     throw new Exception("File not found.");
                 }
@@ -77,14 +92,14 @@ class RangeUpdater
 
                 $this->logger->info("Source is remote URL. Start loading.");
 
-                // try to download the file
+                // try to download the file.
                 try {
                     $source_string = Http::sendHttpRequest($source, 30);
                 } catch (Exception $e) {
                     throw new Exception($e);
                 }
 
-                // request was ok, but response was empty
+                // request was ok, but response was empty.
                 if (!$source_string) {
                     throw new Exception("File could not be loaded.");
                 }
@@ -95,7 +110,7 @@ class RangeUpdater
                 throw new Exception("Invalid source type.");
         }
 
-        // input is not valid json
+        // input is not valid json.
         if (!$json = json_decode($source_string)) {
             throw new Exception("File is not JSON.");
         }
@@ -104,7 +119,9 @@ class RangeUpdater
     }
 
     /**
+     * Insert the data to the respective tables
      * @throws Exception
+     * @param \stdClass[] $data
      */
     private function insertData(array $data): void
     {
@@ -115,9 +132,13 @@ class RangeUpdater
 
             // only insert the name if it is not already there
             try {
-                DatabaseMethods::checkNameInDb('vip_detector_names', $name);
+                $nameId = DatabaseMethods::getNameId($name);
             } catch (NotFoundException) {
-                DatabaseMethods::insertName($name);
+                if (!DatabaseMethods::insertName($name)) {
+                    $this->logger->critical("Name {name} could not be inserted.", $name);
+                }
+
+                $nameId = DatabaseMethods::getNameId($name);
             }
 
             foreach ($entry->ranges as $range) {
@@ -131,11 +152,7 @@ class RangeUpdater
                 }
 
                 // same as for name, don't insert duplicates
-                try {
-                    DatabaseMethods::checkRangeInDb('vip_detector_ranges', $rangeInfo);
-                } catch (NotFoundException) {
-                    $nameId = DatabaseMethods::checkNameInDb('vip_detector_names', $name);
-
+                if (!DatabaseMethods::checkRangeInDb($rangeInfo)) {
                     DatabaseMethods::insertRange(
                         array_merge(
                             $rangeInfo,

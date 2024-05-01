@@ -8,7 +8,7 @@ use Piwik\Log\LoggerInterface;
 
 class Tasks extends \Piwik\Plugin\Tasks
 {
-    public function schedule()
+    public function schedule(): void
     {
         $this->hourly('rangeImportTask');
     }
@@ -16,7 +16,7 @@ class Tasks extends \Piwik\Plugin\Tasks
     /**
      * @throws Exception
      */
-    public function rangeImportTask()
+    public function rangeImportTask(): void
     {
         $logger = StaticContainer::get(LoggerInterface::class);
         $settings = new SystemSettings();

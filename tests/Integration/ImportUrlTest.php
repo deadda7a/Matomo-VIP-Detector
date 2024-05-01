@@ -2,6 +2,7 @@
 
 namespace Piwik\Plugins\VipDetector\tests\Integration;
 
+use Piwik\Plugins\VipDetector\Dao;
 use Piwik\Tests\Framework\TestCase\IntegrationTestCase;
 
 /**
@@ -13,15 +14,13 @@ class ImportUrlTest extends IntegrationTestCase
 {
     public function setUp(): void
     {
+        Dao\DatabaseMethods::createTables();
         parent::setUp();
-
-        // set up your test here if needed
     }
 
     public function tearDown(): void
     {
-        // clean up your test here if needed
-
+        Dao\DatabaseMethods::removeTables();
         parent::tearDown();
     }
 
