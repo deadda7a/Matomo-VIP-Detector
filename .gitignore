@@ -5,3 +5,4 @@ docs/.build
 .phpdoc
 .phpunit.*
 .php-cs*
+.idea

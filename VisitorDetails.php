@@ -17,7 +17,13 @@ class VisitorDetails extends VisitorDetailsAbstract
      */
     public function extendVisitorDetails(&$visitor): void
     {
-        $name = DatabaseMethods::getNameFromIp($visitor['visitIp']);
+        try {
+            $name = DatabaseMethods::getNameFromIp($visitor['visitIp']);
+        } catch (Exception) {
+            $visitor['vip_name'] = '';
+            return;
+        }
+
         $visitor['vip_name'] = Common::sanitizeInputValues($name);
     }
 

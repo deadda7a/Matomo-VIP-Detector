@@ -7,14 +7,13 @@ use Piwik\Db;
 use Piwik\DbHelper;
 use Piwik\Common;
 use Piwik\Plugins\VipDetector\libs\Helpers;
-use Piwik\Plugins\VipDetector\libs\NotFoundException;
 
 class DatabaseMethods
 {
     /**
-     * Get the name associated with an IP. If there is no match, throw an NotFoundException.
+     * Get the name associated with an IP. If there is no match, throw an Exception.
      *
-     * @throws NotFoundException
+     * @throws Exception
      * @param string $ip The IP to check
      * @return string The name found
      */
@@ -35,31 +34,27 @@ class DatabaseMethods
         );
 
         // We can only have one result, so it is enough to fetch one
-        try {
-            $name = Db::fetchOne(
-                $query,
-                array(
-                    Helpers::getAddressType($ip),
-                    $ip
-                )
-            );
-        } catch (Exception $e) {
-            throw new NotFoundException($e->getMessage());
-        }
+        $name = Db::fetchOne(
+            $query,
+            array(
+                Helpers::getAddressType($ip),
+                $ip
+            )
+        );
 
         if (empty($name)) {
-            throw new NotFoundException('No name found');
+            throw new Exception('No name found');
         }
 
         return $name;
     }
 
     /**
-     * Check if the name is in the database. If not, throw a NotFoundException. If yes, return the id.
+     * Check if the name is in the database. If not, throw an Exception. If yes, return the id.
      *
      * @param string $searchValue
      * @return string
-     * @throws NotFoundException
+     * @throws Exception
      */
     public static function getNameId(string $searchValue): string
     {
@@ -69,17 +64,13 @@ class DatabaseMethods
         );
 
         // Names are unique, so we only need the first result
-        try {
-            $result = Db::fetchOne(
-                $query,
-                array($searchValue) // fetchOne expects the parameters to be an array
-            );
-        } catch (Exception $e) {
-            throw new NotFoundException($e->getMessage());
-        }
+        $result = Db::fetchOne(
+            $query,
+            array($searchValue) // fetchOne expects the parameters to be an array
+        );
 
         if (empty($result)) {
-            throw new NotFoundException('No name found');
+            throw new Exception('No name found');
         }
 
         return $result;
