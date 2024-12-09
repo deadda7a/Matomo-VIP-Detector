@@ -80,26 +80,23 @@ class DatabaseMethods
      * Check if the database contains the range in question
      * @param array<string, string> $rangeInfo An array containing the first and last IP address of the range
      * @return bool
+     * @throws Exception
      */
     public static function checkRangeInDb(array $rangeInfo): bool
     {
         $query = sprintf(
             'SELECT `id` FROM `%s` WHERE `range_from` = INET6_ATON(?) AND `range_to` = INET6_ATON(?)',
-            Common::prefixTable('vip_detector_names')
+            Common::prefixTable('vip_detector_ranges')
         );
 
         // Same idea as with the names
-        try {
-            $result = Db::fetchOne(
-                $query,
-                array(
-                    $rangeInfo['range_from'],
-                    $rangeInfo['range_to']
-                )
-            );
-        } catch (Exception) {
-            return false;
-        }
+        $result = Db::fetchOne(
+            $query,
+            array(
+                $rangeInfo['range_from'],
+                $rangeInfo['range_to']
+            )
+        );
 
         if (empty($result)) {
             return false;

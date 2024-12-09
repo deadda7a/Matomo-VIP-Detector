@@ -106,7 +106,6 @@ class RangeUpdater
         // loop through all elements in the source
         foreach ($data as $entry) {
             $name = Common::sanitizeInputValues($entry->name);
-            $this->logger->debug($name);
 
             // only insert the name if it is not already there
             try {
@@ -120,7 +119,7 @@ class RangeUpdater
             }
 
             foreach ($entry->ranges as $range) {
-                $this->logger->debug($range);
+                $this->logger->debug("Currently at {$name}: {$range}");
 
                 try {
                     $rangeInfo = Helpers::getRangeInfo($range);
