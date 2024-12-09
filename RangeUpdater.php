@@ -41,27 +41,13 @@ class RangeUpdater
      * @returns bool The status if the import
      * @throws Exception
      */
-    public function import(): bool
+    public function import(): void
     {
         // Load the json source
-        try {
-            $sourceData = $this->loadJson($this->source_type, $this->source);
-        } catch (Exception $e) {
-            $this->logger->critical("Could not load the JSON file: {$e->getMessage()}");
-            return false;
-        }
-
-        // Insert it
-        try {
-            $this->insertData($sourceData);
-        } catch (Exception $e) {
-            $this->logger->critical("Error while inserting: {$e->getMessage()}");
-            return false;
-        }
+        $sourceData = $this->loadJson($this->source_type, $this->source);
+        $this->insertData($sourceData);
 
         $this->logger->info("Done loading.");
-
-        return true;
     }
 
     /**
@@ -77,11 +63,7 @@ class RangeUpdater
         switch ($source_type) {
             case 'file':
                 $this->logger->info("Source is file. Start loading");
-
-                // File not found etc.
-                if (!$source_string = @file_get_contents($source)) {
-                    throw new Exception("File not found.");
-                }
+                $source_string = @file_get_contents($source);
 
                 break;
 
@@ -92,22 +74,18 @@ class RangeUpdater
 
                 $this->logger->info("Source is remote URL. Start loading.");
 
-                // try to download the file.
-                try {
-                    $source_string = Http::sendHttpRequest($source, 30);
-                } catch (Exception $e) {
-                    throw new Exception($e);
-                }
-
-                // request was ok, but response was empty.
-                if (!$source_string) {
-                    throw new Exception("File could not be loaded.");
-                }
+                // download the file.
+                $source_string = Http::sendHttpRequest($source, 30);
 
                 break;
 
             default:
                 throw new Exception("Invalid source type.");
+        }
+
+        // request was ok, but response was empty, file not found, etc
+        if (!$source_string) {
+            throw new Exception("File could not be loaded.");
         }
 
         // input is not valid json.
@@ -133,9 +111,9 @@ class RangeUpdater
             // only insert the name if it is not already there
             try {
                 $nameId = DatabaseMethods::getNameId($name);
-            } catch (NotFoundException) {
+            } catch (Exception) {
                 if (!DatabaseMethods::insertName($name)) {
-                    $this->logger->critical("Name {name} could not be inserted.", $name);
+                    $this->logger->critical("Name {$name} could not be inserted.");
                 }
 
                 $nameId = DatabaseMethods::getNameId($name);
@@ -147,7 +125,7 @@ class RangeUpdater
                 try {
                     $rangeInfo = Helpers::getRangeInfo($range);
                 } catch (Exception) {
-                    $this->logger->critical("Invalid range {range}", $range);
+                    $this->logger->critical("Invalid range {$range}");
                     continue;
                 }
 

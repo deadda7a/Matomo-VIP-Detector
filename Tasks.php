@@ -31,8 +31,10 @@ class Tasks extends \Piwik\Plugin\Tasks
 
         $importer = new RangeUpdater($importUrl, "url");
 
-        if (!$importer->import()) {
-            $logger->critical("Import failed.");
+        try {
+            $importer->import();
+        } catch (Exception $e) {
+            $logger->critical("Import failed: {$e->getMessage()}");
         }
     }
 }

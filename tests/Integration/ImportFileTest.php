@@ -35,7 +35,7 @@ class ImportFileTest extends ConsoleCommandTestCase
         );
 
         $this->assertEquals(1, $result, $this->getCommandDisplayOutputErrorMessage());
-        self::assertStringContainsString('File not found', $this->applicationTester->getDisplay());
+        self::assertStringContainsString('File could not be loaded', $this->applicationTester->getDisplay());
     }
 
     public function testImportInvalidFileCidr()
@@ -49,8 +49,8 @@ class ImportFileTest extends ConsoleCommandTestCase
             )
         );
 
-        $this->assertEquals(1, $result, $this->getCommandDisplayOutputErrorMessage());
-        self::assertStringContainsString('File is not JSON', $this->applicationTester->getDisplay());
+        $this->assertEquals(0, $result, $this->getCommandDisplayOutputErrorMessage());
+        self::assertStringContainsString('Import done.', $this->applicationTester->getDisplay());
     }
 
     public function testImportInvalidFileIp4()
@@ -64,13 +64,28 @@ class ImportFileTest extends ConsoleCommandTestCase
             )
         );
 
-        $this->assertEquals(1, $result, $this->getCommandDisplayOutputErrorMessage());
-        self::assertStringContainsString('File is not JSON', $this->applicationTester->getDisplay());
+        $this->assertEquals(0, $result, $this->getCommandDisplayOutputErrorMessage());
+        self::assertStringContainsString('Import done.', $this->applicationTester->getDisplay());
     }
 
     public function testImportInvalidFileIp6()
     {
         $file = realpath(dirname(__FILE__) . '/../test-assets/invalid-ip6.json');
+
+        $result = $this->applicationTester->run(
+            array(
+                'command' => 'vipdetector:import-data',
+                'file' => $file
+            )
+        );
+
+        $this->assertEquals(0, $result, $this->getCommandDisplayOutputErrorMessage());
+        self::assertStringContainsString('Import done.', $this->applicationTester->getDisplay());
+    }
+
+    public function testImportInvalidJson()
+    {
+        $file = realpath(dirname(__FILE__) . '/../test-assets/invalid-json.json');
 
         $result = $this->applicationTester->run(
             array(
