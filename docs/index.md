@@ -4,8 +4,10 @@
 
 1. Install the plugin
 2. Create your Json file
-   1. If you don't have one, you can use the one I [created](http://austroedit-ranges.sebastian-elisa-pfeifer.eu/) with Austrian Government Agencies
-3. Import it ```./console vipdetector:import-data /path/to/file.json```
+   1. If you don't have one, you can use the one I [created](https://ranges.vikoe.eu/) with Austrian Government Agencies
+3. Import it
+   1. Either on the console ```./console vipdetector:import-data /path/to/file.json```
+   2. Or use the Matomo scheduler via the Web Interface
 
 ### Json File Structure
 
