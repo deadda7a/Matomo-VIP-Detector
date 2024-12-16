@@ -1,0 +1,42 @@
+name: PHP Phan check
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+  push:
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  checks: read
+  contents: read
+  deployments: none
+  issues: read
+  packages: none
+  pull-requests: read
+  repository-projects: none
+  security-events: none
+  statuses: none
+
+jobs:
+  phpphan:
+    name: PHP Phan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false
+          persist-credentials: false
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          tools: cs2pr,phan
+          coverage: none
+      - name: Requirements
+        run: composer install --prefer-dist --no-progress
+      - name: Get Git Version of Matomo
+        run: bash tests/download-matomo.sh
+      - name: Check PHP
+        id: phpphan
+        run: phan --output-mode checkstyle | cs2pr

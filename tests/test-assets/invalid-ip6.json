@@ -1,0 +1,8 @@
+[
+ {
+  "name": "Example Org 2",
+  "ranges": [
+   "0001:db8::/32"
+  ]
+ }
+]

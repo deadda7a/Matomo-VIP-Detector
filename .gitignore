@@ -1,0 +1,8 @@
+vendor
+phpcs-report.xml
+coverage.xml
+docs/.build
+.phpdoc
+.phpunit.*
+.php-cs*
+.idea

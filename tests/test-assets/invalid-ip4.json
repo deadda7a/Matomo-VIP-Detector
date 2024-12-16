@@ -1,0 +1,14 @@
+[
+ {
+  "name": "Example Org 1",
+  "ranges": [
+   "0.0.2.0/24"
+  ]
+ },
+ {
+  "name": "Example Org 2",
+  "ranges": [
+   "503.0.113.0/24"
+  ]
+ }
+]
