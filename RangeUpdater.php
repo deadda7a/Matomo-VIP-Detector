@@ -30,7 +30,8 @@ class RangeUpdater
      */
     public function __construct(string $source, string $source_type)
     {
-        $this->logger = StaticContainer::get(LoggerInterface::class); // @phan-suppress-current-line PhanAccessMethodInternal
+        // @phan-suppress-next-line PhanAccessMethodInternal
+        $this->logger = StaticContainer::get(LoggerInterface::class);
         $this->source = $source; // Path or Url to the source
         $this->source_type = $source_type; // url or file
     }

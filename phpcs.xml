@@ -1,8 +1,5 @@
 <?xml version="1.0"?>
-<ruleset name="matomo" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="vendor/squizlabs/php_codesniffer/phpcs.xsd">
-
-    <description>Matomo Coding Standard</description>
-
+<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="vendor/squizlabs/php_codesniffer/phpcs.xsd">
     <arg name="extensions" value="php" />
 
     <file>.</file>
@@ -10,28 +7,9 @@
     <exclude-pattern>tests/*</exclude-pattern>
     <exclude-pattern>.phan/*</exclude-pattern>
     <exclude-pattern>vendor/*</exclude-pattern>
-    <exclude-pattern>/tmp/matomo/*</exclude-pattern>
-
-    <config name="installed_paths" value="vendor/slevomat/coding-standard"/>
 
     <!-- Use PSR 12 standard as default -->
-    <!-- Some rules are currently excluded/restricted, but those restrictions should be removed in the future -->
     <rule ref="PSR12">
-        <exclude name="Generic.Files.LineLength" />
-        <exclude name="Generic.PHP.LowerCaseConstant.Found" />
-    </rule>
-
-    <!-- Additional rules that are not covered by PSR above -->
-
-    <!-- Forbid unused use statements -->
-    <rule ref="SlevomatCodingStandard.Namespaces.UnusedUses">
-        <properties>
-            <property name="searchAnnotations" value="true"/>
-            <property name="ignoredAnnotations" type="array">
-                <element value="@group"/>
-                <element value="@api"/>
-            </property>
-        </properties>
     </rule>
 
     <!-- Forbid some functions that should not be used (directly) -->
