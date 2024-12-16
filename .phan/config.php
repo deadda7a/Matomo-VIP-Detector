@@ -12,7 +12,7 @@ return [
     // If this is set to `null`,
     // then Phan assumes the PHP version which is closest to the minor version
     // of the php executable used to execute Phan.
-    "target_php_version" => '8.3',
+    'target_php_version' => '8.3',
 
     // A list of directories that should be parsed for class and
     // method information. After excluding the directories
@@ -38,12 +38,19 @@ return [
     //       party code, directories containing that code
     //       should be added to the `directory_list` as
     //       to `exclude_analysis_directory_list`.
-    "exclude_analysis_directory_list" => [
+    'exclude_analysis_directory_list' => [
         '/tmp/matomo/',
         '/tmp/matomo-net/',
         'vendor/',
         'tests/'
     ],
+
+    'suppress_issue_types' => [
+	'PhanRedefinedClassReference'
+    ],
+
+    'processes' => 4,
+    'maximum_recursion_depth' => 4,
 
     // A list of plugin files to execute.
     // Plugins which are bundled with Phan can be added here by providing their name
