@@ -33,7 +33,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: [ '7.4', '8.1', '8.2', '8.3' ]
+        php: ['7.4', '8.1', '8.2', '8.3']
         target: ['minimum_required_matomo', 'maximum_supported_matomo']
     steps:
       - uses: actions/checkout@v3
@@ -49,11 +49,18 @@ jobs:
           matomo-test-branch: ${{ matrix.target }}
           artifacts-pass: ${{ secrets.ARTIFACTS_PASS }}
           upload-artifacts: ${{ matrix.php == '7.4' && matrix.target == 'maximum_supported_matomo' }}
-          phpunit-test-options: '--coverage-clover coverage.xml'
+          phpunit-test-options: '--coverage-clover coverage.xml --log-junit junit.xml'
           setup-script: tests/github-enable-xdebug.sh
       - name: Upload coverage reports to Codecov
         if: always()
-        uses: codecov/codecov-action@v4.0.1
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          name: Matomo-VIP-Detector-PHP-${{ matrix.php }}
+          slug: deadda7a/Matomo-VIP-Detector
+      - name: Upload test results to Codecov
+        if: always()
+        uses: codecov/test-results-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           name: Matomo-VIP-Detector-PHP-${{ matrix.php }}
