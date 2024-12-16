@@ -4,8 +4,8 @@ namespace Piwik\Plugins\VipDetector;
 
 use Exception;
 use Piwik\Common;
-use Piwik\Plugins\Live\VisitorDetailsAbstract;
 use Piwik\View;
+use Piwik\Plugins\Live\VisitorDetailsAbstract;
 use Piwik\Plugins\VipDetector\Dao\DatabaseMethods;
 
 class VisitorDetails extends VisitorDetailsAbstract

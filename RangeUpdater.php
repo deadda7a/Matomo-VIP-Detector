@@ -9,7 +9,6 @@ use Piwik\Http;
 use Piwik\Log\LoggerInterface;
 use Piwik\Plugins\VipDetector\Dao\DatabaseMethods;
 use Piwik\Plugins\VipDetector\libs\Helpers;
-use Piwik\Plugins\VipDetector\libs\NotFoundException;
 use Piwik\SettingsPiwik;
 
 class RangeUpdater
