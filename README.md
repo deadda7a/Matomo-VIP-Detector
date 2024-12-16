@@ -5,7 +5,7 @@
 This plugin links the IP of the visitor with a database of IP ranges to be able to recognize special visitors.
 The IP ranges can be imported from a json file, either via a command line command or using the scheduler to download it.
 For more infos check the docs and the FAQ.
-The minimum required PHP version is 7.4, but it should work with 7.3 too. Recommended is 8.0+.
+The minimum required PHP version is 7.4. Recommended is 8.0+. Starting with v3.0.0, PHP 7.3 is no longer supported.
 
 ### Warning
 

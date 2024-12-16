@@ -18,7 +18,7 @@ class Tasks extends \Piwik\Plugin\Tasks
      */
     public function rangeImportTask(): void
     {
-        $logger = StaticContainer::get(LoggerInterface::class);
+        $logger = StaticContainer::get(LoggerInterface::class); // @phan-suppress-current-line PhanAccessMethodInternal
         $settings = new SystemSettings();
         $importUrl = $settings->importUrl->getValue();
         $importViaScheduler = $settings->importViaScheduler->getValue();

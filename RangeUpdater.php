@@ -30,14 +30,14 @@ class RangeUpdater
      */
     public function __construct(string $source, string $source_type)
     {
-        $this->logger = StaticContainer::get(LoggerInterface::class);
+        $this->logger = StaticContainer::get(LoggerInterface::class); // @phan-suppress-current-line PhanAccessMethodInternal
         $this->source = $source; // Path or Url to the source
         $this->source_type = $source_type; // url or file
     }
 
     /**
      * Try to fetch the data file and seed the database
-     * @returns bool The status if the import
+     * @return void The status if the import
      * @throws Exception
      */
     public function import(): void
@@ -109,7 +109,7 @@ class RangeUpdater
             // only insert the name if it is not already there
             try {
                 $nameId = DatabaseMethods::getNameId($name);
-            } catch (Exception) {
+            } catch (Exception $ex1) {
                 if (!DatabaseMethods::insertName($name)) {
                     $this->logger->critical("Name {$name} could not be inserted.");
                 }
@@ -122,18 +122,20 @@ class RangeUpdater
 
                 try {
                     $rangeInfo = Helpers::getRangeInfo($range);
-                } catch (Exception) {
+                } catch (Exception $ex) {
                     $this->logger->critical("Invalid range {$range}");
                     continue;
                 }
 
                 // same as for name, don't insert duplicates
                 if (!DatabaseMethods::checkRangeInDb($rangeInfo)) {
+                    $rangeInfoToInsert = array_merge(
+                        $rangeInfo,
+                        ['name_id' => $nameId]
+                    );
+
                     DatabaseMethods::insertRange(
-                        array_merge(
-                            $rangeInfo,
-                            ['name_id' => $nameId]
-                        )
+                        $rangeInfoToInsert
                     );
                 }
             }

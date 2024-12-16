@@ -78,7 +78,7 @@ class DatabaseMethods
 
     /**
      * Check if the database contains the range in question
-     * @param array<string, string> $rangeInfo An array containing the first and last IP address of the range
+     * @param array<int, string, string> $rangeInfo An array containing the first and last IP address of the range
      * @return bool
      * @throws Exception
      */
@@ -124,7 +124,7 @@ class DatabaseMethods
                 $query,
                 array($name)
             );
-        } catch (Exception) {
+        } catch (Exception $ex) {
             return false;
         }
 
@@ -133,7 +133,7 @@ class DatabaseMethods
 
     /**
      * Add a range in the database
-     * @param array<int, string> $rangeInfo An array containing the first and last IP address to be inserted
+     * @param array<string, string> $rangeInfo An array containing the first and last IP address to be inserted
      */
     public static function insertRange(array $rangeInfo): bool
     {
@@ -150,7 +150,7 @@ class DatabaseMethods
                 $query,
                 $rangeInfo
             );
-        } catch (Exception) {
+        } catch (Exception $ex) {
             return false;
         }
 
@@ -160,7 +160,7 @@ class DatabaseMethods
     /**
      * Counts how many names are present in the database
      * @throws Exception
-     * @returns int The number of names
+     * @return int The number of names
      */
     public static function countNames(): int
     {
@@ -170,7 +170,7 @@ class DatabaseMethods
     /**
      * Counts how many ranges are present in the database
      * @throws Exception
-     * @returns int The number of ranges
+     * @return int The number of ranges
      */
     public static function countRanges(): int
     {
@@ -182,7 +182,7 @@ class DatabaseMethods
      * @throws Exception
      * @param string $to_select The field to count
      * @param string $table The table that contains the field
-     * @returns int The number of values in the database
+     * @return int The number of values in the database
      */
     private static function countValues(string $to_select, string $table): int
     {
@@ -194,7 +194,7 @@ class DatabaseMethods
                     Common::prefixTable($table)
                 )
             );
-        } catch (Exception) {
+        } catch (Exception $ex) {
             return 0;
         }
 
@@ -207,7 +207,7 @@ class DatabaseMethods
 
     /**
      * Creates the needed database tables
-     * @returns void
+     * @return void
      */
     public static function createTables(): void
     {
@@ -231,7 +231,7 @@ class DatabaseMethods
 
     /**
      * Deletes the database tables
-     * @returns void
+     * @return void
      */
     public static function removeTables(): void
     {

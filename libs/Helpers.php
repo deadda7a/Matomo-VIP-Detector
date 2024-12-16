@@ -13,7 +13,7 @@ class Helpers
      * Get the range bounds and IP version of a range in CIDR format
      * @throws Exception
      * @param string $range The range to check
-     * @returns array <int, string> The range bounds and the IP version
+     * @return array <int, string> The range bounds and the IP version
      */
     public static function getRangeInfo(string $range): array
     {

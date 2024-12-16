@@ -19,7 +19,7 @@ class VisitorDetails extends VisitorDetailsAbstract
     {
         try {
             $name = DatabaseMethods::getNameFromIp($visitor['visitIp']);
-        } catch (Exception) {
+        } catch (Exception $ex) {
             $visitor['vip_name'] = '';
             return;
         }
