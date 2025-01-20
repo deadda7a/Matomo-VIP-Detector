@@ -3,8 +3,8 @@
     "description": "Detect visits from special predefined IP ranges and display the name",
     "version": "3.0.2",
     "require": {
-        "php": ">=7.4.33,<=8.3",
-        "matomo": ">=5.0.0,<=5.2"
+        "php": ">=7.4.33,<8.4",
+        "matomo": ">=5.0.0,<5.3"
     },
     "authors": [
         {
